@@ -12,6 +12,7 @@ interface PreloaderShowcaseProps {
 }
 
 function CircularProgress({ progress }: { progress: number }) {
+  const reduced = useReducedMotion();
   const r = 58;
   const c = 2 * Math.PI * r;
   const offset = c - (progress / 100) * c;
@@ -19,7 +20,6 @@ function CircularProgress({ progress }: { progress: number }) {
   return (
     <svg className="absolute -inset-3 w-[calc(100%+24px)] h-[calc(100%+24px)] -rotate-90" viewBox="0 0 140 140">
       <circle cx="70" cy="70" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
-      {/* Glow track */}
       <circle cx="70" cy="70" r={r} fill="none" stroke="rgba(139,92,246,0.12)" strokeWidth="8" />
       <motion.circle
         cx="70"
@@ -32,7 +32,8 @@ function CircularProgress({ progress }: { progress: number }) {
         strokeDasharray={c}
         animate={{ strokeDashoffset: offset }}
         transition={{ type: "spring", stiffness: 70, damping: 18 }}
-        style={{ filter: "drop-shadow(0 0 6px rgba(167,139,250,0.7))" }}
+        // drop-shadow filter crashes iOS Safari inside fixed containers
+        style={reduced ? undefined : { filter: "drop-shadow(0 0 6px rgba(167,139,250,0.7))" }}
       />
       <defs>
         <linearGradient id="showcaseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -50,7 +51,8 @@ export function PreloaderShowcase({ featuredGame, progress, exiting }: Preloader
   const ringLit = (i: number) => progress >= ((i + 1) / RING_GAMES.length) * 75;
 
   return (
-    <div className="relative flex items-center justify-center w-full h-full min-h-[320px] sm:min-h-[380px]">
+    // Use explicit height instead of min-h — iOS Safari collapses flex children with min-h
+    <div className="relative flex items-center justify-center w-full" style={{ height: "clamp(300px, 45vh, 420px)" }}>
       {/* Layered glow behind hero — simplified on mobile */}
       <motion.div
         className="absolute w-72 h-72 sm:w-80 sm:h-80 rounded-full bg-violet-600/20 blur-3xl"

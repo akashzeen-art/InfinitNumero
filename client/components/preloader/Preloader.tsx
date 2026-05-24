@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { PreloaderBackground } from "./PreloaderBackground";
 import { PreloaderMarquee } from "./PreloaderMarquee";
 import { PreloaderShowcase } from "./PreloaderShowcase";
@@ -23,13 +22,17 @@ export function Preloader({ onComplete }: PreloaderProps) {
   } = usePreloaderProgress(onComplete);
 
   return (
-    <motion.div
+    <div
       className="fixed inset-0 z-[200] flex flex-col overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: exiting ? 0 : 1 }}
-      transition={{ duration: 0.85, delay: exiting ? 0.08 : 0 }}
+      style={{
+        opacity: exiting ? 0 : 1,
+        transition: exiting ? "opacity 0.85s ease 0.08s" : "opacity 0.4s ease",
+        // Force GPU layer on iOS so fixed+blur works
+        WebkitTransform: "translateZ(0)",
+        transform: "translateZ(0)",
+      }}
       aria-busy={!exiting}
-      aria-label="Loading InfinityPlay"
+      aria-label="Loading"
     >
       <PreloaderBackground />
       {/* Top vignette for depth */}
@@ -38,8 +41,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
       <PreloaderExit exiting={exiting} />
 
       {/* Center showcase */}
-      <div className="relative flex-1 flex items-center justify-center min-h-0 w-full pt-14 pb-2">
-        <div className="w-full max-w-lg px-4 h-full flex items-center justify-center">
+      <div className="relative flex-1 flex items-center justify-center w-full pt-16 pb-2" style={{ minHeight: 0 }}>
+        <div className="w-full max-w-lg px-4 flex items-center justify-center">
           <PreloaderShowcase featuredGame={featuredGame} progress={progress} exiting={exiting} />
         </div>
       </div>
@@ -51,6 +54,6 @@ export function Preloader({ onComplete }: PreloaderProps) {
         imagesLoaded={imagesLoaded}
         exiting={exiting}
       />
-    </motion.div>
+    </div>
   );
 }

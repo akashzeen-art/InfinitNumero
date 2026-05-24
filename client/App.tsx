@@ -7,7 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Preloader } from "./components/preloader";
 import { GamePlayer } from "./components/GamePlayer";
 import { GamePlayerProvider } from "./contexts/GamePlayerContext";
@@ -29,10 +29,11 @@ const AppContent = () => {
         )}
       </AnimatePresence>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: showPreloader ? 0 : 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+      <div
+        style={{
+          opacity: showPreloader ? 0 : 1,
+          transition: "opacity 0.6s ease",
+        }}
       >
         <BrowserRouter>
           <GamePlayerProvider>
@@ -45,7 +46,7 @@ const AppContent = () => {
             <GamePlayer />
           </GamePlayerProvider>
         </BrowserRouter>
-      </motion.div>
+      </div>
     </>
   );
 };

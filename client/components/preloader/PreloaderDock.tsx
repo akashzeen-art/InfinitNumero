@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, ChevronRight } from "lucide-react";
-
 import { PRELOADER_STEPS, PRELOAD_URLS, TOTAL_GAMES } from "./constants";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/use-mobile";
 
 interface PreloaderDockProps {
   progress: number;
@@ -19,6 +19,7 @@ export function PreloaderDock({
   imagesLoaded,
   exiting,
 }: PreloaderDockProps) {
+  const reduced = useReducedMotion();
   const CurrentIcon = PRELOADER_STEPS[step]?.icon ?? Sparkles;
   const isReady = progress >= 100;
 
@@ -58,8 +59,11 @@ export function PreloaderDock({
         </motion.p>
       </div>
 
-      {/* Glass dock */}
-      <div className="rounded-2xl bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] p-4 sm:p-5 shadow-[0_8px_80px_rgba(139,92,246,0.18),inset_0_1px_0_rgba(255,255,255,0.06)]">
+      {/* Glass dock — no backdrop-blur on mobile (iOS Safari bug) */}
+      <div className={cn(
+        "rounded-2xl border border-white/[0.08] p-4 sm:p-5 shadow-[0_8px_60px_rgba(139,92,246,0.15)]",
+        reduced ? "bg-[#0e0820]" : "bg-white/[0.04] backdrop-blur-2xl"
+      )}>
         {/* Step pills */}
         <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-hide pb-0.5">
           {PRELOADER_STEPS.map((s, i) => {
