@@ -1,5 +1,5 @@
 import { Game } from "@/data/games";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGamePlayer } from "@/contexts/GamePlayerContext";
@@ -13,11 +13,31 @@ interface GameCardProps {
 export function GameCard({ game, onPlay, featured }: GameCardProps) {
   const { playGame } = useGamePlayer();
   const handlePlay = () => (onPlay ?? playGame)(game);
+
+  const [inView, setInView] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "120px" } // start loading 120px before card enters screen
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <article
+      ref={ref}
       className={cn(
         "group game-card aspect-square",
         featured && "ring-2 ring-orange-400/50 shadow-orange-500/20"
@@ -27,7 +47,8 @@ export function GameCard({ game, onPlay, featured }: GameCardProps) {
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && handlePlay()}
     >
-      {!loaded && !error && (
+      {/* Skeleton shown until image loads */}
+      {(!loaded || !inView) && !error && (
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-100 via-fuchsia-50 to-orange-50 animate-pulse" />
       )}
 
@@ -36,16 +57,16 @@ export function GameCard({ game, onPlay, featured }: GameCardProps) {
           <span className="text-3xl mb-2">🎮</span>
           <p className="text-xs font-bold text-gray-700 text-center line-clamp-2">{game.name}</p>
         </div>
-      ) : (
-          <img
+      ) : inView ? (
+        <img
           src={game.thumbnail_url}
           alt={game.name}
-          loading="lazy"
-          className={cn("game-card-image rounded-2xl", loaded ? "opacity-100" : "opacity-0")}
+          decoding="async"
+          className={cn("game-card-image rounded-2xl transition-opacity duration-300", loaded ? "opacity-100" : "opacity-0")}
           onLoad={() => setLoaded(true)}
           onError={() => setError(true)}
         />
-      )}
+      ) : null}
 
       {featured && (
         <div className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-md bg-gradient-to-r from-orange-500 to-red-500 text-[10px] font-black text-white uppercase tracking-wide">
