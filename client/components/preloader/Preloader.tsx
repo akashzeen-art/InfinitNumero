@@ -32,6 +32,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
       aria-label="Loading Play365"
     >
       <PreloaderBackground />
+      {/* Top vignette for depth */}
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#05020f]/60 to-transparent pointer-events-none z-10" />
       <PreloaderMarquee />
       <PreloaderExit exiting={exiting} />
 
@@ -47,9 +49,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
         step={step}
         loadedGames={loadedGames}
         imagesLoaded={imagesLoaded}
-        canSkip={canSkip}
         exiting={exiting}
-        onSkip={handleSkip}
       />
     </motion.div>
   );

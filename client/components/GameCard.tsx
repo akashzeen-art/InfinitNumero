@@ -37,7 +37,7 @@ export function GameCard({ game, onPlay, featured }: GameCardProps) {
           <p className="text-xs font-bold text-gray-700 text-center line-clamp-2">{game.name}</p>
         </div>
       ) : (
-        <img
+          <img
           src={game.thumbnail_url}
           alt={game.name}
           loading="lazy"
@@ -52,10 +52,6 @@ export function GameCard({ game, onPlay, featured }: GameCardProps) {
           Hot
         </div>
       )}
-
-      <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
-      </div>
 
       <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/40 to-transparent rounded-b-2xl opacity-70 group-hover:opacity-100 transition-opacity" />
 

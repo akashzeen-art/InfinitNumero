@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { gamesData } from "@/data/games";
 import { useGamePlayer } from "@/contexts/GamePlayerContext";
+import { useReducedMotion } from "@/hooks/use-mobile";
 import {
   Play,
   Sparkles,
@@ -45,11 +46,13 @@ function useCounter(target: number, start: boolean) {
 
 export function Hero() {
   const { playGame } = useGamePlayer();
+  const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
   const [go, setGo] = useState(false);
   const games = featured.length >= 4 ? featured : gamesData.slice(0, 8);
   const hero = games[active];
-  const count = useCounter(gamesData.length, go);
+  // On mobile just show the final count immediately — no RAF loop
+  const count = useCounter(gamesData.length, go && !reduced);
 
   useEffect(() => {
     setGo(true);
@@ -64,28 +67,44 @@ export function Hero() {
       <div className="absolute inset-0 hero-mesh" />
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMTM5LDkyLDI0NiwwLjA4KSIvPjwvc3ZnPg==')] opacity-60" />
 
-      <motion.div
-        className="absolute -top-40 right-[-10%] w-[min(800px,90vw)] h-[min(800px,90vw)] rounded-full opacity-60"
-        style={{ background: "radial-gradient(circle, rgba(139,92,246,0.35) 0%, transparent 70%)" }}
-        animate={{ scale: [1, 1.08, 1], x: [0, 20, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-[-20%] left-[-15%] w-[min(600px,80vw)] h-[min(600px,80vw)] rounded-full opacity-50"
-        style={{ background: "radial-gradient(circle, rgba(236,72,153,0.25) 0%, transparent 70%)" }}
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute top-[30%] left-[40%] w-[300px] h-[300px] rounded-full opacity-40"
-        style={{ background: "radial-gradient(circle, rgba(251,146,60,0.2) 0%, transparent 70%)" }}
-        animate={{ y: [0, -30, 0] }}
-        transition={{ duration: 8, repeat: Infinity }}
-      />
+      {/* Animated blobs — desktop only */}
+      {!reduced && (
+        <>
+          <motion.div
+            className="absolute -top-40 right-[-10%] w-[min(800px,90vw)] h-[min(800px,90vw)] rounded-full opacity-60"
+            style={{ background: "radial-gradient(circle, rgba(139,92,246,0.35) 0%, transparent 70%)" }}
+            animate={{ scale: [1, 1.08, 1], x: [0, 20, 0] }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-[-20%] left-[-15%] w-[min(600px,80vw)] h-[min(600px,80vw)] rounded-full opacity-50"
+            style={{ background: "radial-gradient(circle, rgba(236,72,153,0.25) 0%, transparent 70%)" }}
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute top-[30%] left-[40%] w-[300px] h-[300px] rounded-full opacity-40"
+            style={{ background: "radial-gradient(circle, rgba(251,146,60,0.2) 0%, transparent 70%)" }}
+            animate={{ y: [0, -30, 0] }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
+        </>
+      )}
+      {/* Static blobs on mobile */}
+      {reduced && (
+        <>
+          <div className="absolute -top-40 right-[-10%] w-[min(600px,90vw)] h-[min(600px,90vw)] rounded-full opacity-40" style={{ background: "radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%)" }} />
+          <div className="absolute bottom-[-20%] left-[-15%] w-[min(400px,80vw)] h-[min(400px,80vw)] rounded-full opacity-35" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.2) 0%, transparent 70%)" }} />
+        </>
+      )}
 
-      {/* Decorative rings */}
-      <div className="absolute top-20 right-[15%] w-72 h-72 rounded-full border border-violet-300/20 hidden lg:block" />
-      <div className="absolute top-28 right-[18%] w-52 h-52 rounded-full border border-fuchsia-300/15 hidden lg:block animate-spin-slow" />
+      {/* Decorative rings — desktop only */}
+      {!reduced && (
+        <>
+          <div className="absolute top-20 right-[15%] w-72 h-72 rounded-full border border-violet-300/20 hidden lg:block" />
+          <div className="absolute top-28 right-[18%] w-52 h-52 rounded-full border border-fuchsia-300/15 hidden lg:block animate-spin-slow" />
+        </>
+      )}
 
       <div className="relative z-10 flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20 w-full flex flex-col justify-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-center">
@@ -262,8 +281,6 @@ export function Hero() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.3 + i * 0.08 }}
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
                     >
                       <img
                         src={game.thumbnail_url}
@@ -300,27 +317,31 @@ export function Hero() {
               </div>
             </div>
 
-            {/* Floating accent cards */}
-            {/* <motion.div
-              className="absolute -left-4 top-1/4 hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-white shadow-xl border border-violet-100 text-sm font-bold text-gray-800"
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 4, repeat: Infinity }}
-            >
-              <Sparkles className="w-4 h-4 text-violet-500" />
-              100% Free
-            </motion.div> */}
-            <motion.div
-              className="absolute -right-2 bottom-1/4 hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-white shadow-xl border border-violet-100 text-sm font-bold text-gray-800"
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
-            >
-              <Zap className="w-4 h-4 text-amber-500" />
-              Instant Play
-            </motion.div>
+                {/* Floating accent cards — desktop only */}
+            {!reduced && (
+              <>
+                <motion.div
+                  className="absolute -left-4 top-1/4 hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-white shadow-xl border border-violet-100 text-sm font-bold text-gray-800"
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                >
+                  <Sparkles className="w-4 h-4 text-violet-500" />
+                  100% Free
+                </motion.div>
+                <motion.div
+                  className="absolute -right-2 bottom-1/4 hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-white shadow-xl border border-violet-100 text-sm font-bold text-gray-800"
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
+                >
+                  <Zap className="w-4 h-4 text-amber-500" />
+                  Instant Play
+                </motion.div>
+              </>
+            )}
           </motion.div>
         </div>
 
-        {/* Marquee */}
+        {/* Marquee — fewer items on mobile */}
         <motion.div
           className="mt-12 sm:mt-16"
           initial={{ opacity: 0, y: 20 }}
@@ -336,8 +357,9 @@ export function Hero() {
             <div className="relative rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm">
               <div className="absolute left-0 inset-y-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
               <div className="absolute right-0 inset-y-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+              {/* Fewer items on mobile to reduce DOM + animation cost */}
               <div className="flex animate-marquee py-3.5">
-                {[...gamesData.slice(0, 20), ...gamesData.slice(0, 20)].map((g, i) => (
+                {[...gamesData.slice(0, reduced ? 10 : 20), ...gamesData.slice(0, reduced ? 10 : 20)].map((g, i) => (
                   <button
                     key={`${g.name}-${i}`}
                     type="button"
@@ -347,7 +369,7 @@ export function Hero() {
                     <img
                       src={g.thumbnail_url}
                       alt=""
-                      className="w-10 h-10 rounded-xl object-cover ring-2 ring-violet-100 group-hover:ring-violet-300 group-hover:scale-110 transition-all shadow-sm"
+                      className="w-10 h-10 rounded-xl object-cover ring-2 ring-violet-100 group-hover:ring-violet-300 transition-all shadow-sm"
                     />
                     <span className="text-sm font-bold text-gray-600 group-hover:text-violet-700 whitespace-nowrap">
                       {g.name}
