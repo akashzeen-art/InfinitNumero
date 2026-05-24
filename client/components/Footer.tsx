@@ -9,7 +9,7 @@ export function Footer() {
           <div className="gradient-brand rounded-xl p-2 shadow-lg shadow-purple-500/20">
             <Gamepad2 className="w-4 h-4 text-white" />
           </div>
-          <span className="font-outfit font-extrabold text-lg text-white">Play365</span>
+          <span className="font-outfit font-extrabold text-lg text-white">InfinityPlay</span>
         </Link>
 
         <nav className="flex items-center gap-6 text-sm text-gray-500">
@@ -19,7 +19,7 @@ export function Footer() {
           <Link to="/category/Puzzle" className="hover:text-white transition-colors">Puzzle</Link>
         </nav>
 
-        <p className="text-xs text-gray-600">&copy; {new Date().getFullYear()} Play365. Free games, no limits.</p>
+        <p className="text-xs text-gray-600">&copy; {new Date().getFullYear()} InfinityPlay. Free games, no limits.</p>
       </div>
     </footer>
   );

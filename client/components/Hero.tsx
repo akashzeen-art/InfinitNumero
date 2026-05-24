@@ -320,14 +320,14 @@ export function Hero() {
                 {/* Floating accent cards — desktop only */}
             {!reduced && (
               <>
-                <motion.div
+                {/* <motion.div
                   className="absolute -left-4 top-1/4 hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-white shadow-xl border border-violet-100 text-sm font-bold text-gray-800"
                   animate={{ y: [0, -8, 0] }}
                   transition={{ duration: 4, repeat: Infinity }}
                 >
                   <Sparkles className="w-4 h-4 text-violet-500" />
                   100% Free
-                </motion.div>
+                </motion.div> */}
                 <motion.div
                   className="absolute -right-2 bottom-1/4 hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-white shadow-xl border border-violet-100 text-sm font-bold text-gray-800"
                   animate={{ y: [0, 8, 0] }}

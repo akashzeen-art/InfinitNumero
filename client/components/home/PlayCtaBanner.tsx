@@ -15,10 +15,10 @@ export function PlayCtaBanner() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 text-white text-sm font-bold mb-6 backdrop-blur-sm">
+          {/* <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 text-white text-sm font-bold mb-6 backdrop-blur-sm">
             <Sparkles className="w-4 h-4" />
             100% free forever
-          </div>
+          </div> */}
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 font-outfit">
             Ready to play?
           </h2>

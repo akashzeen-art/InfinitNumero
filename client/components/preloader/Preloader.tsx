@@ -29,7 +29,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
       animate={{ opacity: exiting ? 0 : 1 }}
       transition={{ duration: 0.85, delay: exiting ? 0.08 : 0 }}
       aria-busy={!exiting}
-      aria-label="Loading Play365"
+      aria-label="Loading InfinityPlay"
     >
       <PreloaderBackground />
       {/* Top vignette for depth */}

@@ -166,7 +166,7 @@ export function PreloaderShowcase({ featuredGame, progress, exiting }: Preloader
             <div className="w-5 h-5 rounded-md gradient-brand flex items-center justify-center">
               <Gamepad2 className="w-3 h-3 text-white" strokeWidth={2.5} />
             </div>
-            <span className="text-[10px] font-black text-white tracking-wide">PLAY365</span>
+            <span className="text-[10px] font-black text-white tracking-wide">InfinityPlay</span>
           </motion.div>
 
           {/* Progress badge */}

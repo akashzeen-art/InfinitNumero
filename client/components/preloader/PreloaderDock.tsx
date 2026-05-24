@@ -37,9 +37,9 @@ export function PreloaderDock({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: 0.15, type: "spring", stiffness: 200, damping: 18 }}
         >
-          <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]">Play</span>
+          <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]">Infinity</span>
           <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-orange-400 bg-clip-text text-transparent animate-text-shimmer drop-shadow-[0_0_30px_rgba(139,92,246,0.5)]">
-            365
+            Play
           </span>
         </motion.h1>
         <motion.p

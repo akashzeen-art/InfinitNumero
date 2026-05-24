@@ -59,7 +59,7 @@ export function Navbar({ onSearch }: NavbarProps) {
               <Gamepad2 className="w-5 h-5" strokeWidth={2.5} />
             </div>
             <span className="font-outfit font-extrabold text-xl text-gradient hidden sm:block">
-              Play365
+              InfinityPlay
             </span>
           </Link>
 
