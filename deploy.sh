@@ -14,12 +14,14 @@ echo "📦 Installing dependencies..."
 npm install -g pnpm --silent
 pnpm install --frozen-lockfile
 
+echo "⚙️  Generating Prisma client..."
+npx prisma generate
+
 echo "🔨 Building client + server..."
 pnpm build
 
 echo "🗄️  Running Prisma migrations..."
 npx prisma migrate deploy
-npx prisma generate
 
 echo "♻️  Restarting PM2..."
 pm2 describe infinityplay > /dev/null 2>&1 \
