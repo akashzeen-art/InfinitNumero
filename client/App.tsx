@@ -25,7 +25,14 @@ function ProtectedRoutes() {
   const { user, isLoading } = useAuth();
   const [showPreloader, setShowPreloader] = useState(true);
 
-  if (isLoading) return null; // wait for auth check before rendering anything
+  // Show nothing while checking auth token
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#05020f" }}>
+        <div className="w-8 h-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
   if (!user) return <Navigate to="/login" replace />;
 
@@ -38,19 +45,28 @@ function ProtectedRoutes() {
       </AnimatePresence>
 
       <div style={{ opacity: showPreloader ? 0 : 1, transition: "opacity 0.6s ease" }}>
-        <GamePlayerProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/category/:category" element={<Categories />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <GamePlayer />
-        </GamePlayerProvider>
+        <AIProfileProvider>
+          <GamePlayerProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/categories" element={<Categories />} />
+              <Route path="/category/:category" element={<Categories />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <GamePlayer />
+          </GamePlayerProvider>
+        </AIProfileProvider>
       </div>
     </>
   );
+}
+
+function LoginRoute() {
+  const { user, isLoading } = useAuth();
+  if (isLoading) return null;
+  if (user) return <Navigate to="/" replace />;
+  return <Login />;
 }
 
 const App = () => (
@@ -60,24 +76,14 @@ const App = () => (
       <Sonner />
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AuthProvider>
-          <AIProfileProvider>
-            <Routes>
-              <Route path="/login" element={<LoginRoute />} />
-              <Route path="/*" element={<ProtectedRoutes />} />
-            </Routes>
-          </AIProfileProvider>
+          <Routes>
+            <Route path="/login" element={<LoginRoute />} />
+            <Route path="/*" element={<ProtectedRoutes />} />
+          </Routes>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
-
-// Redirect to home if already logged in
-function LoginRoute() {
-  const { user, isLoading } = useAuth();
-  if (isLoading) return null;
-  if (user) return <Navigate to="/" replace />;
-  return <Login />;
-}
 
 createRoot(document.getElementById("root")!).render(<App />);
