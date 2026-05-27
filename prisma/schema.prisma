@@ -1,0 +1,41 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String      @id @default(cuid())
+  msisdn      String      @unique
+  createdAt   DateTime    @default(now())
+  lastActive  DateTime    @default(now())
+  aiProfile   AIProfile?
+  sessions    GameSession[]
+}
+
+model AIProfile {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  interests          Json     @default("{}")
+  playStyle          String   @default("explorer")
+  totalPlayTime      Int      @default(0)
+  sessionsCount      Int      @default(0)
+  recentlyPlayed     String[] @default([])
+  updatedAt          DateTime @updatedAt
+}
+
+model GameSession {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameName   String
+  duration   Int      // seconds
+  playedAt   DateTime @default(now())
+
+  @@index([userId])
+}

@@ -202,6 +202,25 @@ export default function Categories() {
     [filteredCategories]
   );
 
+  // ── hooks that depend on `category` must be called unconditionally ──
+  const decoded = category ? decodeURIComponent(category) : "";
+  const meta = CATEGORY_META[decoded] ?? DEFAULT_META;
+
+  const gamesInCategory = useMemo(
+    () =>
+      gamesData
+        .filter((g) => g.categories.includes(decoded))
+        .filter((g) => g.name.toLowerCase().includes(searchQuery.toLowerCase())),
+    [decoded, searchQuery]
+  );
+
+  const relatedCategories = useMemo(
+    () => allCategories.filter((c) => c !== decoded).slice(0, 5),
+    [allCategories, decoded]
+  );
+
+  const { playGame } = useGamePlayer();
+
   if (!category) {
     return (
       <div className="page-shell mesh-bg min-h-screen">
@@ -348,24 +367,6 @@ export default function Categories() {
       </div>
     );
   }
-
-  const decoded = decodeURIComponent(category);
-  const meta = CATEGORY_META[decoded] ?? DEFAULT_META;
-
-  const gamesInCategory = useMemo(
-    () =>
-      gamesData
-        .filter((g) => g.categories.includes(decoded))
-        .filter((g) => g.name.toLowerCase().includes(searchQuery.toLowerCase())),
-    [decoded, searchQuery]
-  );
-
-  const relatedCategories = useMemo(
-    () => allCategories.filter((c) => c !== decoded).slice(0, 5),
-    [allCategories, decoded]
-  );
-
-  const { playGame } = useGamePlayer();
 
   return (
     <div className="page-shell min-h-screen">

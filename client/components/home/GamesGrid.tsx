@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { GameCard } from "@/components/GameCard";
 import { Game } from "@/data/games";
 import { useReducedMotion } from "@/hooks/use-mobile";
+import { ChevronDown } from "lucide-react";
 
 const PAGE_SIZE = 24;
 
@@ -16,19 +17,13 @@ export function GamesGrid({ games, featuredPredicate, className }: GamesGridProp
   const reduced = useReducedMotion();
   const [visible, setVisible] = useState(PAGE_SIZE);
 
-  // Reset pagination when the game list changes (e.g. category filter)
-  useEffect(() => {
-    setVisible(PAGE_SIZE);
-  }, [games]);
+  useEffect(() => { setVisible(PAGE_SIZE); }, [games]);
 
   if (games.length === 0) return null;
 
   const shown = games.slice(0, visible);
   const hasMore = visible < games.length;
-
-  const gridClass =
-    className ??
-    "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5";
+  const gridClass = className ?? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5";
 
   return (
     <div>
@@ -44,10 +39,7 @@ export function GamesGrid({ games, featuredPredicate, className }: GamesGridProp
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-40px" }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.03 } },
-          }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
         >
           {shown.map((game, i) => (
             <motion.div
@@ -61,12 +53,14 @@ export function GamesGrid({ games, featuredPredicate, className }: GamesGridProp
       )}
 
       {hasMore && (
-        <div className="flex flex-col items-center gap-1.5 mt-8">
+        <div className="flex justify-center mt-8">
           <button
             type="button"
             onClick={() => setVisible((v) => v + PAGE_SIZE)}
-            className="px-8 py-3 rounded-2xl bg-white border-2 border-violet-200 text-violet-700 font-bold text-sm hover:bg-violet-50 hover:border-violet-300 hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-2xl text-sm font-bold text-white/60 hover:text-white transition-all"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
+            <ChevronDown className="w-4 h-4" />
             Load more · {games.length - visible} remaining
           </button>
         </div>
