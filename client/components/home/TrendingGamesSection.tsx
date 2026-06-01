@@ -4,6 +4,7 @@ import { Flame, ChevronRight, TrendingUp } from "lucide-react";
 import { GameCard } from "@/components/GameCard";
 import { getGamesByCategory } from "@/lib/game-utils";
 import { useReducedMotion } from "@/hooks/use-mobile";
+import { useLang } from "@/i18n/LanguageContext";
 
 interface TrendingGamesSectionProps {
   overrideGames?: ReturnType<typeof getGamesByCategory>;
@@ -11,6 +12,7 @@ interface TrendingGamesSectionProps {
 
 export function TrendingGamesSection({ overrideGames }: TrendingGamesSectionProps = {}) {
   const reduced = useReducedMotion();
+  const { t } = useLang();
   const topGames = overrideGames ?? getGamesByCategory("Top 10 Games", 12);
   if (topGames.length === 0) return null;
 
@@ -31,15 +33,15 @@ export function TrendingGamesSection({ overrideGames }: TrendingGamesSectionProp
             </div>
             <div>
               <div className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-orange-400 mb-1.5">
-                <TrendingUp className="w-3 h-3" /> Hot this week
+                <TrendingUp className="w-3 h-3" /> {t.sections.trendingBadge}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-outfit text-white">Trending Now</h2>
-              <p className="text-white/35 text-sm mt-0.5">The games everyone is playing right now</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold font-outfit text-white">{t.sections.trendingTitle}</h2>
+              <p className="text-white/35 text-sm mt-0.5">{t.sections.trendingSubtitle}</p>
             </div>
           </div>
           <Link to="/category/Top%2010%20Games"
             className="inline-flex items-center gap-1.5 text-sm font-bold text-orange-400 hover:text-orange-300 hover:gap-2.5 transition-all shrink-0">
-            See all <ChevronRight className="w-4 h-4" />
+            {t.sections.seeAll} <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 

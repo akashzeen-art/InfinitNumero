@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Gamepad2, Zap, Puzzle, Swords, Star, Brain, Github, Twitter } from "lucide-react";
+import { Gamepad2, Zap, Puzzle, Swords, Star, Brain } from "lucide-react";
+import { useLang } from "@/i18n/LanguageContext";
 
 const LINKS = [
   { label: "Home",       to: "/" },
@@ -16,6 +17,18 @@ const CATS = [
 ];
 
 export function Footer() {
+  const { t } = useLang();
+  const LINKS = [
+    { label: t.nav.home,       to: "/" },
+    { label: t.nav.categories, to: "/categories" },
+    { label: t.nav.profile,    to: "/profile" },
+  ];
+  const CATS = [
+    { label: "Arcade",        to: "/category/Arcade",           icon: Zap,    color: "text-pink-400" },
+    { label: "Puzzle",        to: "/category/Puzzle",           icon: Puzzle, color: "text-cyan-400" },
+    { label: "Action",        to: "/category/Action",           icon: Swords, color: "text-red-400" },
+    { label: "Easy to Play",  to: "/category/Easy%20to%20Play", icon: Star,   color: "text-emerald-400" },
+  ];
   return (
     <footer className="relative overflow-hidden border-t border-white/5" style={{ background: "#030010" }}>
       {/* grid bg */}
@@ -35,7 +48,7 @@ export function Footer() {
               <span className="font-outfit font-extrabold text-xl text-gradient">InfinityPlay</span>
             </Link>
             <p className="text-white/35 text-sm leading-relaxed max-w-xs">
-              AI-powered gaming platform. Personalized recommendations that learn from every play.
+              {t.footer.tagline}
             </p>
             <div className="flex items-center gap-2 mt-4">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-violet-500/15 border border-violet-500/25">
@@ -47,7 +60,7 @@ export function Footer() {
 
           {/* nav */}
           <div>
-            <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-4">Navigate</p>
+            <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-4">{t.footer.navigate}</p>
             <ul className="space-y-2.5">
               {LINKS.map((l) => (
                 <li key={l.to}>
@@ -61,7 +74,7 @@ export function Footer() {
 
           {/* categories */}
           <div>
-            <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-4">Categories</p>
+            <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-4">{t.footer.categories}</p>
             <ul className="space-y-2.5">
               {CATS.map((c) => (
                 <li key={c.to}>
@@ -82,7 +95,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs text-white/25 font-medium">All systems operational</span>
+            <span className="text-xs text-white/25 font-medium">{t.footer.status}</span>
           </div>
         </div>
       </div>

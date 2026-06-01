@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Play, Brain, Zap } from "lucide-react";
+import { useLang } from "@/i18n/LanguageContext";
 
 export function PlayCtaBanner() {
+  const { t } = useLang();
   return (
     <section className="relative py-20 sm:py-28 overflow-hidden">
       {/* bg */}
@@ -25,16 +27,16 @@ export function PlayCtaBanner() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-sm font-bold text-violet-300"
             style={{ background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.3)" }}>
             <Brain className="w-4 h-4" />
-            AI-Powered · 100% Free
+            {t.cta.badge}
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 font-outfit leading-tight">
-            Ready to play?
+            {t.cta.title}
             <br />
-            <span className="text-gradient">Your AI is waiting.</span>
+            <span className="text-gradient">{t.cta.titleGradient}</span>
           </h2>
           <p className="text-lg text-white/50 mb-10 max-w-xl mx-auto">
-            Hundreds of games. Zero downloads. An AI that learns what you love.
+            {t.cta.subtitle}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -44,7 +46,7 @@ export function PlayCtaBanner() {
               style={{ background: "linear-gradient(135deg, #7c3aed, #db2777)", boxShadow: "0 8px 32px rgba(139,92,246,0.5)" }}
             >
               <Play className="w-5 h-5 fill-current" />
-              Browse All Games
+              {t.cta.browseAll}
             </Link>
             <Link
               to="/categories"
@@ -52,7 +54,7 @@ export function PlayCtaBanner() {
               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)" }}
             >
               <Zap className="w-5 h-5" />
-              Explore Categories
+              {t.cta.exploreCategories}
             </Link>
           </div>
         </motion.div>

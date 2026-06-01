@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Gamepad2, ArrowRight, Loader2, Smartphone } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useLang } from "@/i18n/LanguageContext";
 
 const COUNTRY_CODES = [
   { code: "+91", flag: "🇮🇳", name: "India" },
@@ -13,6 +14,7 @@ const COUNTRY_CODES = [
 
 export default function Login() {
   const { login } = useAuth();
+  const { t } = useLang();
   const [countryCode, setCountryCode] = useState("+91");
   const [number, setNumber] = useState("");
   const [error, setError] = useState("");
@@ -22,7 +24,7 @@ export default function Login() {
     e.preventDefault();
     const digits = number.replace(/\D/g, "");
     if (digits.length < 7) {
-      setError("Enter a valid mobile number");
+      setError(t.login.invalidNumber);
       return;
     }
     setError("");
@@ -30,7 +32,7 @@ export default function Login() {
     try {
       await login(`${countryCode}${digits}`);
     } catch (err: any) {
-      setError(err.message ?? "Login failed. Try again.");
+      setError(err.message ?? t.login.loginFailed);
     } finally {
       setLoading(false);
     }
@@ -56,16 +58,16 @@ export default function Login() {
             <Gamepad2 className="w-8 h-8 text-white" strokeWidth={2.5} />
           </div>
           <h1 className="text-2xl font-extrabold text-white font-outfit">InfinityPlay</h1>
-          <p className="text-sm text-white/50 mt-1">Your AI-powered gaming hub</p>
+          <p className="text-sm text-white/50 mt-1">{t.login.subtitle}</p>
         </div>
 
         {/* Card */}
         <div className="rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl p-6 shadow-2xl">
           <div className="flex items-center gap-2 mb-1">
             <Smartphone className="w-4 h-4 text-violet-400" />
-            <h2 className="text-base font-bold text-white">Enter your mobile number</h2>
+            <h2 className="text-base font-bold text-white">{t.login.title}</h2>
           </div>
-          <p className="text-xs text-white/40 mb-5">No password needed. Just your number.</p>
+          <p className="text-xs text-white/40 mb-5">{t.login.noPassword}</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex gap-2">
@@ -105,7 +107,7 @@ export default function Login() {
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  Continue to Play
+                  {t.login.continue}
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -113,7 +115,7 @@ export default function Login() {
           </form>
 
           <p className="text-[10px] text-white/25 text-center mt-4 leading-relaxed">
-            By continuing you agree to our terms. Your number is used only for your gaming profile.
+            {t.login.terms}
           </p>
         </div>
       </motion.div>

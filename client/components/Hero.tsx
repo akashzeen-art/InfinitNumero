@@ -5,6 +5,7 @@ import { gamesData } from "@/data/games";
 import { useGamePlayer } from "@/contexts/GamePlayerContext";
 import { useReducedMotion } from "@/hooks/use-mobile";
 import { Play, Zap, Users, ChevronRight, Flame, Puzzle, Swords, Gamepad2, Star, Brain } from "lucide-react";
+import { useLang } from "@/i18n/LanguageContext";
 
 const featured = gamesData.filter((g) => g.categories.includes("Top 10 Games")).slice(0, 8);
 const bentoSide = gamesData.slice(4, 10);
@@ -36,6 +37,7 @@ function useCounter(target: number, start: boolean) {
 export function Hero() {
   const { playGame } = useGamePlayer();
   const reduced = useReducedMotion();
+  const { t } = useLang();
   const [active, setActive] = useState(0);
   const [go, setGo] = useState(false);
   const games = featured.length >= 4 ? featured : gamesData.slice(0, 8);
@@ -89,14 +91,14 @@ export function Hero() {
                     <span className="relative rounded-full h-2.5 w-2.5 bg-emerald-500" />
                   </span>
                   <Brain className="w-4 h-4 text-violet-400" />
-                  <span className="text-sm font-bold text-violet-300">{gamesData.length}+ games · AI Live</span>
+                  <span className="text-sm font-bold text-violet-300">{gamesData.length}+ {t.hero.badge}</span>
                 </div>
 
                 <h1 className="font-outfit text-[2.75rem] sm:text-5xl xl:text-[3.5rem] font-black leading-[0.95] tracking-tight mb-5">
-                  <span className="text-white">Play.</span><br />
-                  <span className="text-white">Win.</span><br />
+                  <span className="text-white">{t.hero.headline1}</span><br />
+                  <span className="text-white">{t.hero.headline2}</span><br />
                   <span className="relative inline-block mt-1">
-                    <span className="text-gradient animate-gradient-shift">Repeat.</span>
+                    <span className="text-gradient animate-gradient-shift">{t.hero.headline3}</span>
                     <svg className="absolute -bottom-1 left-0 w-full h-3" viewBox="0 0 200 12" preserveAspectRatio="none">
                       <path d="M0 8 Q50 0 100 8 T200 8" stroke="rgba(139,92,246,0.5)" strokeWidth="3" fill="none" />
                     </svg>
@@ -104,7 +106,7 @@ export function Hero() {
                 </h1>
 
                 <p className="text-white/45 text-base sm:text-lg leading-relaxed mb-6 max-w-md">
-                  The ultimate AI-powered gaming hub. Arcade, puzzles & action — instant play, no download.
+                  {t.hero.subtitle}
                 </p>
 
                 {/* CTAs */}
@@ -112,12 +114,12 @@ export function Hero() {
                   <Link to="/#games" className="btn-primary h-13 px-8 text-base justify-center group relative overflow-hidden">
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                     <Play className="w-5 h-5 fill-white relative z-10" />
-                    <span className="relative z-10">Play Free Now</span>
+                    <span className="relative z-10">{t.hero.playFree}</span>
                   </Link>
                   <Link to="/categories"
                     className="inline-flex items-center justify-center gap-2 h-13 px-8 rounded-2xl font-bold text-white/70 hover:text-white transition-all"
                     style={{ border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.04)" }}>
-                    Categories <ChevronRight className="w-4 h-4" />
+                    {t.hero.categories} <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
 
@@ -141,9 +143,9 @@ export function Hero() {
                 {/* stats */}
                 <div className="flex items-center gap-4 sm:gap-6 pt-6" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
                   {[
-                    { icon: Gamepad2, val: `${count}+`, lbl: "Games",   c: "text-violet-400" },
-                    { icon: Users,    val: "1M+",        lbl: "Players", c: "text-fuchsia-400" },
-                    { icon: Star,     val: "4.9",         lbl: "Rating",  c: "text-amber-400" },
+                    { icon: Gamepad2, val: `${count}+`, lbl: t.hero.gamesLabel,   c: "text-violet-400" },
+                    { icon: Users,    val: "1M+",        lbl: t.hero.playersLabel, c: "text-fuchsia-400" },
+                    { icon: Star,     val: "4.9",         lbl: t.hero.ratingLabel,  c: "text-amber-400" },
                   ].map(({ icon: Icon, val, lbl, c }, i) => (
                     <div key={lbl} className="flex items-center gap-2.5">
                       {i > 0 && <div className="w-px h-8 hidden sm:block" style={{ background: "rgba(255,255,255,0.07)" }} />}
@@ -179,18 +181,18 @@ export function Hero() {
                       <Gamepad2 className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-white text-sm font-bold">Featured Games</p>
-                      <p className="text-violet-400/60 text-[10px]">Tap to play instantly</p>
+                      <p className="text-white text-sm font-bold">{t.hero.featuredGames}</p>
+                      <p className="text-violet-400/60 text-[10px]">{t.hero.tapToPlay}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="px-2.5 py-1 rounded-lg text-white text-[10px] font-black uppercase flex items-center gap-1"
                       style={{ background: "rgba(239,68,68,0.8)" }}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" /> Live
+                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" /> {t.hero.live}
                     </span>
                     <span className="hidden sm:flex px-2.5 py-1 rounded-lg text-white/70 text-[10px] font-bold"
                       style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                      🏆 Trending
+                      🏆 {t.hero.trending}
                     </span>
                   </div>
                 </div>
@@ -214,14 +216,14 @@ export function Hero() {
                         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(5,2,15,0.95) 0%, rgba(5,2,15,0.2) 50%, transparent 100%)" }} />
                         <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white text-[10px] font-black uppercase"
                           style={{ background: "linear-gradient(135deg, #f97316, #ef4444)" }}>
-                          <Flame className="w-3 h-3" /> #1 Hot
+                          <Flame className="w-3 h-3" /> {t.hero.hot}
                         </div>
                         <div className="absolute bottom-0 inset-x-0 p-4">
                           <p className="text-white font-bold text-lg sm:text-xl leading-tight mb-3 line-clamp-2">{hero?.name}</p>
                           <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold shadow-xl group-hover:scale-105 transition-transform"
                             style={{ background: "rgba(139,92,246,0.9)", boxShadow: "0 4px 20px rgba(139,92,246,0.5)" }}>
                             <Play className="w-4 h-4 fill-current text-white" />
-                            <span className="text-white">Play Now</span>
+                            <span className="text-white">{t.hero.playNow}</span>
                           </span>
                         </div>
                       </motion.button>
@@ -275,7 +277,7 @@ export function Hero() {
                 transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
               >
                 <Zap className="w-4 h-4 text-amber-400" />
-                Instant Play
+                {t.hero.instantPlay}
               </motion.div>
             )}
           </motion.div>
@@ -285,7 +287,7 @@ export function Hero() {
         <motion.div className="mt-12 sm:mt-16" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="h-px flex-1 max-w-[80px]" style={{ background: "linear-gradient(to right, transparent, rgba(139,92,246,0.5))" }} />
-            <p className="text-xs font-bold text-violet-400 uppercase tracking-[0.25em]">Popular Now</p>
+            <p className="text-xs font-bold text-violet-400 uppercase tracking-[0.25em]">{t.hero.popularNow}</p>
             <div className="h-px flex-1 max-w-[80px]" style={{ background: "linear-gradient(to left, transparent, rgba(139,92,246,0.5))" }} />
           </div>
           <div className="relative rounded-2xl p-[1px]"

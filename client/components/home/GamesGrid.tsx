@@ -4,6 +4,7 @@ import { GameCard } from "@/components/GameCard";
 import { Game } from "@/data/games";
 import { useReducedMotion } from "@/hooks/use-mobile";
 import { ChevronDown } from "lucide-react";
+import { useLang } from "@/i18n/LanguageContext";
 
 const PAGE_SIZE = 24;
 
@@ -15,6 +16,7 @@ interface GamesGridProps {
 
 export function GamesGrid({ games, featuredPredicate, className }: GamesGridProps) {
   const reduced = useReducedMotion();
+  const { t } = useLang();
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   useEffect(() => { setVisible(PAGE_SIZE); }, [games]);
@@ -61,7 +63,7 @@ export function GamesGrid({ games, featuredPredicate, className }: GamesGridProp
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
             <ChevronDown className="w-4 h-4" />
-            Load more · {games.length - visible} remaining
+            {t.sections.loadMore} · {games.length - visible} {t.sections.remaining}
           </button>
         </div>
       )}

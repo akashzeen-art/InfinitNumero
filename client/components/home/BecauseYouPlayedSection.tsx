@@ -3,6 +3,7 @@ import { Zap } from "lucide-react";
 import { Game } from "@/data/games";
 import { GameCard } from "@/components/GameCard";
 import { useReducedMotion } from "@/hooks/use-mobile";
+import { useLang } from "@/i18n/LanguageContext";
 
 interface BecauseYouPlayedSectionProps {
   category: string;
@@ -11,6 +12,7 @@ interface BecauseYouPlayedSectionProps {
 
 export function BecauseYouPlayedSection({ category, games }: BecauseYouPlayedSectionProps) {
   const reduced = useReducedMotion();
+  const { t } = useLang();
   if (games.length === 0) return null;
 
   return (
@@ -23,9 +25,11 @@ export function BecauseYouPlayedSection({ category, games }: BecauseYouPlayedSec
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-orange-400 mb-0.5">
-              Because you love {category}
+              {t.sections.becauseBadge} {category}
             </p>
-            <h2 className="text-lg font-extrabold font-outfit text-white">More {category} Games</h2>
+            <h2 className="text-lg font-extrabold font-outfit text-white">
+              {t.sections.becauseTitle} {category}
+            </h2>
           </div>
         </div>
 

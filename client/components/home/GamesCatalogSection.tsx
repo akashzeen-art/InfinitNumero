@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import { Search, LayoutGrid, Sparkles, Database } from "lucide-react";
+import { Search, Sparkles, Database } from "lucide-react";
 import { gamesData } from "@/data/games";
 import { useGamesFilter } from "@/hooks/useGamesFilter";
 import { CategoryFilterBar } from "./CategoryFilterBar";
 import { GamesGrid } from "./GamesGrid";
 import { GamesEmptyState } from "./GamesEmptyState";
+import { useLang } from "@/i18n/LanguageContext";
 
 interface GamesCatalogSectionProps {
   searchQuery?: string;
@@ -12,6 +13,7 @@ interface GamesCatalogSectionProps {
 
 export function GamesCatalogSection({ searchQuery = "" }: GamesCatalogSectionProps) {
   const { categories, selectedCategory, setSelectedCategory, filteredGames, resetFilters } = useGamesFilter(searchQuery);
+  const { t } = useLang();
 
   const categoryCounts = Object.fromEntries(
     categories.map((cat) => [
@@ -22,12 +24,10 @@ export function GamesCatalogSection({ searchQuery = "" }: GamesCatalogSectionPro
 
   return (
     <section className="relative py-16 sm:py-24 overflow-hidden" id="games">
-      {/* bg */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.06), transparent 60%)" }} />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* heading */}
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -36,18 +36,17 @@ export function GamesCatalogSection({ searchQuery = "" }: GamesCatalogSectionPro
         >
           <div className="section-badge mb-5">
             <Database className="w-4 h-4" />
-            Full game library
+            {t.sections.fullLibrary}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-outfit text-white mb-3">
-            Browse the{" "}
-            <span className="text-gradient">Complete Collection</span>
+            {t.sections.catalogTitle}{" "}
+            <span className="text-gradient">{t.sections.catalogTitleGradient}</span>
           </h2>
           <p className="text-white/35 text-base sm:text-lg">
-            {gamesData.length} free games — filter by category or search by name
+            {gamesData.length} {t.sections.catalogSubtitle}
           </p>
         </motion.div>
 
-        {/* filter panel */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -59,7 +58,7 @@ export function GamesCatalogSection({ searchQuery = "" }: GamesCatalogSectionPro
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-white/50">
               <Sparkles className="w-4 h-4 text-violet-400" />
-              <span className="text-white/70">{filteredGames.length}</span> games
+              <span className="text-white/70">{filteredGames.length}</span> {t.sections.gamesCount}
               {selectedCategory !== "All Games" && (
                 <span className="text-violet-400">in {selectedCategory}</span>
               )}
@@ -68,7 +67,7 @@ export function GamesCatalogSection({ searchQuery = "" }: GamesCatalogSectionPro
               <div className="flex items-center gap-2 text-sm text-white/40 px-3 py-1.5 rounded-lg"
                 style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)" }}>
                 <Search className="w-3.5 h-3.5 text-violet-400" />
-                Searching: &quot;{searchQuery}&quot;
+                {t.sections.searching}: &quot;{searchQuery}&quot;
               </div>
             )}
           </div>

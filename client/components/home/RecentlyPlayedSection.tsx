@@ -3,6 +3,7 @@ import { History, Clock } from "lucide-react";
 import { Game } from "@/data/games";
 import { GameCard } from "@/components/GameCard";
 import { useReducedMotion } from "@/hooks/use-mobile";
+import { useLang } from "@/i18n/LanguageContext";
 
 interface RecentlyPlayedSectionProps {
   games: Game[];
@@ -10,6 +11,7 @@ interface RecentlyPlayedSectionProps {
 
 export function RecentlyPlayedSection({ games }: RecentlyPlayedSectionProps) {
   const reduced = useReducedMotion();
+  const { t } = useLang();
   if (games.length === 0) return null;
 
   return (
@@ -21,9 +23,9 @@ export function RecentlyPlayedSection({ games }: RecentlyPlayedSectionProps) {
             <History className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-extrabold font-outfit text-white">Continue Playing</h2>
+            <h2 className="text-lg font-extrabold font-outfit text-white">{t.sections.recentTitle}</h2>
             <p className="text-[11px] text-white/35 font-medium flex items-center gap-1">
-              <Clock className="w-3 h-3" /> Pick up where you left off
+              <Clock className="w-3 h-3" /> {t.sections.recentSubtitle}
             </p>
           </div>
         </div>
