@@ -15,7 +15,7 @@ const STORAGE_KEY = "InfinityPlay-lang";
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(
-    () => (localStorage.getItem(STORAGE_KEY) as Lang) ?? "en"
+    () => (localStorage.getItem(STORAGE_KEY) as Lang) ?? "fr"
   );
 
   const setLang = (l: Lang) => {
