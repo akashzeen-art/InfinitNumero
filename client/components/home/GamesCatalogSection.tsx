@@ -23,7 +23,7 @@ export function GamesCatalogSection({ searchQuery = "" }: GamesCatalogSectionPro
   );
 
   return (
-    <section className="relative py-16 sm:py-24 overflow-hidden" id="games">
+    <section className="relative py-16 sm:py-24" id="games">
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.06), transparent 60%)" }} />
 

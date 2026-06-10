@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 export function PlayCtaBanner() {
   const { t } = useLang();
   return (
-    <section className="relative py-20 sm:py-28 overflow-hidden">
+    <section className="relative py-20 sm:py-28">
       {/* bg */}
       <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0c0618 0%, #1a0533 40%, #0c0618 100%)" }} />
       <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(139,92,246,0.25), transparent 55%)" }} />

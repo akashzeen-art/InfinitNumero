@@ -103,14 +103,15 @@
 
   /* ── game card ── */
   .game-card {
-    @apply relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 ease-out;
+    @apply relative rounded-2xl cursor-pointer transition-all duration-300 ease-out;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+    contain: layout style;
   }
   .game-card:hover {
-    transform: translateY(-6px) scale(1.02);
     border-color: rgba(139,92,246,0.5);
-    box-shadow: 0 20px 60px rgba(139,92,246,0.25), 0 0 0 1px rgba(139,92,246,0.2);
+    box-shadow: 0 8px 30px rgba(139,92,246,0.25), 0 0 0 1px rgba(139,92,246,0.2);
   }
   .game-card-image { @apply w-full h-full object-cover; }
   .group:hover .game-card-image { transform: scale(1.08); transition: transform 0.5s ease; }

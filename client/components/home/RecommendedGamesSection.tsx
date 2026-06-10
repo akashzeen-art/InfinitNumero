@@ -19,7 +19,7 @@ export function RecommendedGamesSection({ games, playStyle }: RecommendedGamesSe
     t.playStyle[playStyle as keyof typeof t.playStyle] ?? t.playStyle.explorer;
 
   return (
-    <section className="relative py-12 sm:py-16 overflow-hidden">
+    <section className="relative py-12 sm:py-16">
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(139,92,246,0.08), transparent 60%)" }} />
 

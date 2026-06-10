@@ -17,7 +17,7 @@ export function TrendingGamesSection({ overrideGames }: TrendingGamesSectionProp
   if (topGames.length === 0) return null;
 
   return (
-    <section className="relative py-14 sm:py-16 overflow-hidden">
+    <section className="relative py-14 sm:py-16">
       {/* bg */}
       <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(249,115,22,0.04), transparent)" }} />
       <div className="absolute top-0 right-0 w-80 h-80 rounded-full blur-3xl opacity-20 pointer-events-none"

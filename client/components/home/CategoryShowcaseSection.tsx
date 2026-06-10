@@ -20,7 +20,7 @@ export function CategoryShowcaseSection({ config, limit = 8, layout = "scroll" }
   if (games.length === 0) return null;
 
   return (
-    <section className="relative overflow-hidden py-14 sm:py-16">
+    <section className="relative py-14 sm:py-16">
       {/* subtle bg tint */}
       <div className="absolute inset-0 pointer-events-none opacity-40"
         style={{ background: `radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.06), transparent 60%)` }} />
