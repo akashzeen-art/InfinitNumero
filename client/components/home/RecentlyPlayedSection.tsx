@@ -1,8 +1,6 @@
-import { motion } from "framer-motion";
 import { History, Clock } from "lucide-react";
 import { Game } from "@/data/games";
 import { GameCard } from "@/components/GameCard";
-import { useReducedMotion } from "@/hooks/use-mobile";
 import { useLang } from "@/i18n/LanguageContext";
 
 interface RecentlyPlayedSectionProps {
@@ -10,7 +8,6 @@ interface RecentlyPlayedSectionProps {
 }
 
 export function RecentlyPlayedSection({ games }: RecentlyPlayedSectionProps) {
-  const reduced = useReducedMotion();
   const { t } = useLang();
   if (games.length === 0) return null;
 
@@ -31,23 +28,11 @@ export function RecentlyPlayedSection({ games }: RecentlyPlayedSectionProps) {
         </div>
 
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 snap-x">
-          {games.slice(0, 10).map((game, i) =>
-            reduced ? (
-              <div key={game.name} className="flex-shrink-0 w-32 sm:w-36 snap-start">
-                <GameCard game={game} />
-              </div>
-            ) : (
-              <motion.div
-                key={game.name}
-                className="flex-shrink-0 w-32 sm:w-36 snap-start"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <GameCard game={game} />
-              </motion.div>
-            )
-          )}
+          {games.slice(0, 10).map((game) => (
+            <div key={game.name} className="flex-shrink-0 w-32 sm:w-36 snap-start">
+              <GameCard game={game} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

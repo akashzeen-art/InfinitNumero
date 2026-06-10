@@ -1,8 +1,6 @@
-import { motion } from "framer-motion";
 import { Zap } from "lucide-react";
 import { Game } from "@/data/games";
 import { GameCard } from "@/components/GameCard";
-import { useReducedMotion } from "@/hooks/use-mobile";
 import { useLang } from "@/i18n/LanguageContext";
 
 interface BecauseYouPlayedSectionProps {
@@ -11,7 +9,6 @@ interface BecauseYouPlayedSectionProps {
 }
 
 export function BecauseYouPlayedSection({ category, games }: BecauseYouPlayedSectionProps) {
-  const reduced = useReducedMotion();
   const { t } = useLang();
   if (games.length === 0) return null;
 
@@ -34,24 +31,11 @@ export function BecauseYouPlayedSection({ category, games }: BecauseYouPlayedSec
         </div>
 
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 snap-x">
-          {games.map((game, i) =>
-            reduced ? (
-              <div key={game.name} className="flex-shrink-0 w-36 sm:w-40 snap-start">
-                <GameCard game={game} />
-              </div>
-            ) : (
-              <motion.div
-                key={game.name}
-                className="flex-shrink-0 w-36 sm:w-40 snap-start"
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.06 }}
-              >
-                <GameCard game={game} />
-              </motion.div>
-            )
-          )}
+          {games.map((game) => (
+            <div key={game.name} className="flex-shrink-0 w-36 sm:w-40 snap-start">
+              <GameCard game={game} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

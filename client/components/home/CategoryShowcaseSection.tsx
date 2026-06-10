@@ -56,24 +56,11 @@ export function CategoryShowcaseSection({ config, limit = 8, layout = "scroll" }
 
         {layout === "scroll" ? (
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
-            {games.map((game, i) =>
-              reduced ? (
-                <div key={game.name} className="flex-shrink-0 w-40 sm:w-44">
-                  <GameCard game={game} featured={i < 2} />
-                </div>
-              ) : (
-                <motion.div
-                  key={game.name}
-                  className="flex-shrink-0 w-40 sm:w-44"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.06 }}
-                >
-                  <GameCard game={game} featured={i < 2} />
-                </motion.div>
-              )
-            )}
+            {games.map((game, i) => (
+              <div key={game.name} className="flex-shrink-0 w-40 sm:w-44">
+                <GameCard game={game} featured={i < 2} />
+              </div>
+            ))}
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
