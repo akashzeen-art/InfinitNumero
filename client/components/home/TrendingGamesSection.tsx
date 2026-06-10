@@ -44,9 +44,9 @@ export function TrendingGamesSection({ overrideGames }: TrendingGamesSectionProp
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory">
           {topGames.map((game, i) => (
             <div key={game.name} className="flex-shrink-0 w-36 sm:w-44 snap-start">
-              <div className="relative">
+              <div className="relative pt-3">
                 {i < 3 && (
-                  <span className="absolute -top-2 -left-1 z-10 px-2 py-0.5 rounded-md text-[10px] font-black text-white uppercase shadow-md"
+                  <span className="absolute top-0 -left-1 z-10 px-2 py-0.5 rounded-md text-[10px] font-black text-white uppercase shadow-md"
                     style={{ background: "linear-gradient(135deg, #f97316, #ef4444)" }}>#{i + 1}</span>
                 )}
                 <GameCard game={game} featured />

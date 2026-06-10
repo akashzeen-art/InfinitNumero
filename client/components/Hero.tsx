@@ -242,7 +242,7 @@ export function Hero() {
         >
           {[
             { icon: Gamepad2, val: `${count}+`, lbl: t.hero.gamesLabel,   c: "text-violet-400" },
-            { icon: Users,    val: "1M+",        lbl: t.hero.playersLabel, c: "text-fuchsia-400" },
+            { icon: Users,    val: "100k+",        lbl: t.hero.playersLabel, c: "text-fuchsia-400" },
             { icon: Star,     val: "4.9",         lbl: t.hero.ratingLabel,  c: "text-amber-400" },
           ].map(({ icon: Icon, val, lbl, c }, i) => (
             <div key={lbl} className="flex items-center gap-2.5">
