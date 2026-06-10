@@ -179,7 +179,7 @@
 .animate-pulse-glow      { animation: pulse-glow 3s ease-in-out infinite; }
 .animate-gradient-shift  { animation: gradient-shift 5s ease infinite; background-size:200% auto; }
 .animate-aurora          { animation: aurora 12s ease-in-out infinite; }
-.animate-marquee         { animation: marquee 45s linear infinite; }
+.animate-marquee         { animation: marquee 20s linear infinite; }
 .animate-marquee:hover   { animation-play-state: paused; }
 .animate-shimmer-line    { animation: shimmer-line 1.5s ease-in-out infinite; }
 .animate-orbit-spin      { animation: orbit-spin 28s linear infinite; }
@@ -203,7 +203,7 @@
   .animate-shimmer-line,.animate-orbit-spin,.animate-orbit-spin-reverse,.animate-ring-pulse,
   .animate-pulse-glow,.animate-float,.animate-float-delayed,.animate-preloader-float,
   .animate-logo-glow,.animate-dot-bounce,.animate-neon-pulse { animation: none !important; }
-  .animate-marquee,.animate-preloader-ticker,.animate-preloader-ticker-reverse { animation-duration: 60s !important; }
+  .animate-marquee,.animate-preloader-ticker,.animate-preloader-ticker-reverse { animation-duration: 30s !important; }
 }
 
 .preloader-noise {
