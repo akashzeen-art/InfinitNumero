@@ -14,6 +14,7 @@ import { GamePlayerProvider } from "./contexts/GamePlayerContext";
 import { AIProfileProvider } from "./context/AIProfileContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LanguageProvider } from "./i18n/LanguageContext";
+import { ScrollToTop } from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Categories from "./pages/Categories";
 import NotFound from "./pages/NotFound";
@@ -78,6 +79,7 @@ const App = () => (
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <LanguageProvider>
         <AuthProvider>
+          <ScrollToTop />
           <Routes>
             <Route path="/login" element={<LoginRoute />} />
             <Route path="/*" element={<ProtectedRoutes />} />
