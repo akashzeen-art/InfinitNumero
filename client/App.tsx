@@ -14,7 +14,7 @@ import { GamePlayerProvider } from "./contexts/GamePlayerContext";
 import { AIProfileProvider } from "./context/AIProfileContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LanguageProvider } from "./i18n/LanguageContext";
-import { ScrollLayout } from "./components/ScrollToTop";
+import { ScrollLayout, ScrollToTop } from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Categories from "./pages/Categories";
 import NotFound from "./pages/NotFound";
@@ -50,11 +50,13 @@ function ProtectedRoutes() {
         <AIProfileProvider>
           <GamePlayerProvider>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/categories" element={<Categories />} />
-              <Route path="/category/:category" element={<Categories />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="*" element={<NotFound />} />
+              <Route element={<ScrollLayout />}>
+                <Route path="/" element={<Index />} />
+                <Route path="/categories" element={<Categories />} />
+                <Route path="/category/:category" element={<Categories />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
             </Routes>
             <GamePlayer />
           </GamePlayerProvider>
@@ -79,6 +81,7 @@ const App = () => (
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <LanguageProvider>
         <AuthProvider>
+          <ScrollToTop />
           <Routes>
             <Route element={<ScrollLayout />}>
               <Route path="/login" element={<LoginRoute />} />

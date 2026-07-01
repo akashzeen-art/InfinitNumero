@@ -1,20 +1,6 @@
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { ScrollLink } from "@/components/ScrollLink";
 import { Gamepad2, Zap, Puzzle, Swords, Star, Brain } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
-
-const LINKS = [
-  { label: "Home",       to: "/" },
-  { label: "Categories", to: "/categories" },
-  { label: "Profile",    to: "/profile" },
-];
-
-const CATS = [
-  { label: "Arcade",       to: "/category/Arcade",        icon: Zap,    color: "text-pink-400" },
-  { label: "Puzzle",       to: "/category/Puzzle",        icon: Puzzle, color: "text-cyan-400" },
-  { label: "Action",       to: "/category/Action",        icon: Swords, color: "text-red-400" },
-  { label: "Easy to Play", to: "/category/Easy%20to%20Play", icon: Star, color: "text-emerald-400" },
-];
 
 export function Footer() {
   const { t } = useLang();
@@ -41,12 +27,12 @@ export function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10">
           {/* brand */}
           <div>
-            <Link to="/" className="inline-flex items-center gap-3 mb-4 group">
+            <ScrollLink to="/" className="inline-flex items-center gap-3 mb-4 group">
               <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center shadow-lg shadow-violet-500/30 group-hover:shadow-violet-500/50 transition-shadow">
                 <Gamepad2 className="w-5 h-5 text-white" strokeWidth={2.5} />
               </div>
               <span className="font-outfit font-extrabold text-xl text-gradient">InfinityPlay</span>
-            </Link>
+            </ScrollLink>
             <p className="text-white/35 text-sm leading-relaxed max-w-xs">
               {t.footer.tagline}
             </p>
@@ -64,9 +50,9 @@ export function Footer() {
             <ul className="space-y-2.5">
               {LINKS.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-sm text-white/45 hover:text-violet-400 transition-colors font-medium">
+                  <ScrollLink to={l.to} className="text-sm text-white/45 hover:text-violet-400 transition-colors font-medium">
                     {l.label}
-                  </Link>
+                  </ScrollLink>
                 </li>
               ))}
             </ul>
@@ -78,10 +64,10 @@ export function Footer() {
             <ul className="space-y-2.5">
               {CATS.map((c) => (
                 <li key={c.to}>
-                  <Link to={c.to} className="inline-flex items-center gap-2 text-sm text-white/45 hover:text-white/80 transition-colors font-medium group">
+                  <ScrollLink to={c.to} className="inline-flex items-center gap-2 text-sm text-white/45 hover:text-white/80 transition-colors font-medium group">
                     <c.icon className={`w-3.5 h-3.5 ${c.color} opacity-70 group-hover:opacity-100 transition-opacity`} />
                     {c.label}
-                  </Link>
+                  </ScrollLink>
                 </li>
               ))}
             </ul>

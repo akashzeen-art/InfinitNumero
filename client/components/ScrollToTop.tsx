@@ -24,7 +24,7 @@ export function forceScrollToTop() {
   body.style.scrollBehavior = prevBodyBehavior;
 }
 
-function scheduleScrollToTop() {
+export function scheduleScrollToTop() {
   forceScrollToTop();
 
   const rafId = requestAnimationFrame(() => {
@@ -42,13 +42,25 @@ function scheduleScrollToTop() {
   };
 }
 
-let globalListenersAttached = false;
+/** Call from navigation links (footer, navbar, etc.). */
+export function scrollAfterNavigation() {
+  scheduleScrollToTop();
+}
 
-function useGlobalScrollListeners() {
+function useScrollOnRouteChange() {
+  const { pathname, hash, key } = useLocation();
+
   useEffect(() => {
-    if (globalListenersAttached) return;
-    globalListenersAttached = true;
+    if (hash) return;
+    return scheduleScrollToTop();
+  }, [pathname, hash, key]);
+}
 
+/** Mount once inside the router — sets up browser scroll restoration. */
+export function ScrollToTop() {
+  useScrollOnRouteChange();
+
+  useEffect(() => {
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
     }
@@ -58,63 +70,15 @@ function useGlobalScrollListeners() {
       scheduleScrollToTop();
     };
 
-    const onLinkClick = (event: MouseEvent) => {
-      if (event.defaultPrevented || event.button !== 0) return;
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
-      const anchor = (event.target as HTMLElement | null)?.closest("a[href]");
-      if (!anchor) return;
-
-      const href = anchor.getAttribute("href");
-      if (
-        !href ||
-        href.startsWith("http") ||
-        href.startsWith("//") ||
-        href.startsWith("mailto:") ||
-        href.startsWith("tel:")
-      ) {
-        return;
-      }
-
-      const url = new URL(href, window.location.href);
-      if (url.origin !== window.location.origin) return;
-      if (url.pathname === window.location.pathname && url.hash) return;
-
-      if (url.pathname !== window.location.pathname || url.search !== window.location.search) {
-        forceScrollToTop();
-      }
-    };
-
     window.addEventListener("pageshow", onPageShow);
-    document.addEventListener("click", onLinkClick, true);
-
-    return () => {
-      globalListenersAttached = false;
-      window.removeEventListener("pageshow", onPageShow);
-      document.removeEventListener("click", onLinkClick, true);
-    };
+    return () => window.removeEventListener("pageshow", onPageShow);
   }, []);
-}
 
-function useScrollToTopOnNavigate() {
-  const { pathname, hash, key } = useLocation();
-
-  useGlobalScrollListeners();
-
-  useEffect(() => {
-    if (hash) return;
-    return scheduleScrollToTop();
-  }, [pathname, hash, key]);
-}
-
-/** Route layout — scrolls to top whenever the active page changes. */
-export function ScrollLayout() {
-  useScrollToTopOnNavigate();
-  return <Outlet />;
-}
-
-/** Mount once near the router (listeners + scroll on navigation). */
-export function ScrollToTop() {
-  useScrollToTopOnNavigate();
   return null;
+}
+
+/** Wraps page routes so scroll resets when the active screen changes. */
+export function ScrollLayout() {
+  useScrollOnRouteChange();
+  return <Outlet />;
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { ScrollLink } from "@/components/ScrollLink";
 import { Input } from "@/components/ui/input";
 import { Search, Menu, X, Gamepad2, Play, User, LogOut, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -59,7 +60,7 @@ export function Navbar({ onSearch }: NavbarProps) {
   const currentLang = LANGUAGES.find((l) => l.code === lang)!;
 
   const navLink = (path: string, label: string, match?: boolean) => (
-    <Link
+    <ScrollLink
       to={path}
       className={cn(
         "px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200",
@@ -69,7 +70,7 @@ export function Navbar({ onSearch }: NavbarProps) {
       )}
     >
       {label}
-    </Link>
+    </ScrollLink>
   );
 
   return (
@@ -86,14 +87,14 @@ export function Navbar({ onSearch }: NavbarProps) {
         <div className="flex items-center justify-between h-16 lg:h-[4.25rem]">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group shrink-0">
+          <ScrollLink to="/" className="flex items-center gap-2.5 group shrink-0">
             <div className="gradient-brand text-white rounded-xl p-2.5 shadow-md shadow-violet-500/30 group-hover:shadow-violet-500/50 group-hover:scale-105 transition-all duration-300">
               <Gamepad2 className="w-5 h-5" strokeWidth={2.5} />
             </div>
             <span className="font-outfit font-extrabold text-xl text-gradient hidden sm:block">
               InfinityPlay
             </span>
-          </Link>
+          </ScrollLink>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
@@ -152,10 +153,10 @@ export function Navbar({ onSearch }: NavbarProps) {
             </div>
 
             {/* Play Now */}
-            <Link to="/#games" className="btn-primary text-sm !py-2.5 !px-5 !rounded-xl">
+            <ScrollLink to="/#games" className="btn-primary text-sm !py-2.5 !px-5 !rounded-xl">
               <Play className="w-4 h-4 fill-current" />
               {t.nav.playNow}
-            </Link>
+            </ScrollLink>
 
             {/* User avatar */}
             {user && (
@@ -176,11 +177,11 @@ export function Navbar({ onSearch }: NavbarProps) {
                       <p className="text-xs text-white/30 font-medium">{t.nav.signedInAs}</p>
                       <p className="text-sm font-bold text-white truncate">{user.msisdn}</p>
                     </div>
-                    <Link to="/profile"
+                    <ScrollLink to="/profile"
                       className="flex items-center gap-2.5 px-4 py-3 text-sm font-semibold text-white/60 hover:text-white hover:bg-white/5 transition-colors">
                       <User className="w-4 h-4" />
                       {t.nav.profile}
-                    </Link>
+                    </ScrollLink>
                     <button type="button" onClick={logout}
                       className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/10 transition-colors">
                       <LogOut className="w-4 h-4" />
@@ -245,10 +246,10 @@ export function Navbar({ onSearch }: NavbarProps) {
               ))}
             </div>
 
-            <Link to="/#games" className="btn-primary w-full !rounded-xl mt-2">
+            <ScrollLink to="/#games" className="btn-primary w-full !rounded-xl mt-2">
               <Play className="w-4 h-4 fill-current" />
               {t.nav.playNow}
-            </Link>
+            </ScrollLink>
 
             {user && (
               <button type="button" onClick={logout}
