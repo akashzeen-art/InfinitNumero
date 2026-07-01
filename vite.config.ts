@@ -1,10 +1,9 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
-import { createServer } from "./server";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+// Dev server config — Express API is loaded only when `pnpm dev` runs.
+export default defineConfig({
   server: {
     host: "::",
     port: 8080,
@@ -23,17 +22,15 @@ export default defineConfig(({ mode }) => ({
       "@shared": path.resolve(__dirname, "./shared"),
     },
   },
-}));
+});
 
 function expressPlugin(): Plugin {
   return {
     name: "express-plugin",
-    apply: "serve", // Only apply during development (serve mode)
-    configureServer(server) {
-      const app = createServer();
-
-      // Add Express app as middleware to Vite dev server
-      server.middlewares.use(app);
+    apply: "serve",
+    async configureServer(server) {
+      const { createServer } = await import("./server/index.ts");
+      server.middlewares.use(createServer());
     },
   };
 }
