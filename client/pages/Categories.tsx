@@ -19,6 +19,7 @@ import {
   LayoutGrid,
   Play,
   Search,
+  Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGamePlayer } from "@/contexts/GamePlayerContext";
@@ -44,6 +45,13 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
     gradient: "from-orange-500 via-red-500 to-rose-700",
     accent: "shadow-orange-500/35",
     description: "The hottest picks players love right now",
+    featured: true,
+  },
+  Premium: {
+    icon: <Crown className="w-6 h-6" />,
+    gradient: "from-amber-400 via-yellow-500 to-orange-600",
+    accent: "shadow-amber-500/35",
+    description: "Exclusive premium titles — all 32 ready to play",
     featured: true,
   },
   Arcade: {

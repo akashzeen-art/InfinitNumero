@@ -33,9 +33,9 @@ export function useRecommendations() {
   const trendingGames = useMemo(() => getDynamicTrending(12), [profile.sessionsCount]);
 
   const personalizedSectionOrder = useMemo(() => {
-    const defaultOrder = HOME_CATEGORY_SECTIONS.filter((s) => s.id !== "Top 10 Games").map(
-      (s) => s.id
-    );
+    const defaultOrder = HOME_CATEGORY_SECTIONS.filter(
+      (s) => s.id !== "Top 10 Games" && s.id !== "Premium"
+    ).map((s) => s.id);
     return isWarm ? getPersonalizedCategoryOrder(profile, defaultOrder) : defaultOrder;
   }, [profile, isWarm]);
 

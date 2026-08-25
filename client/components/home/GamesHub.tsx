@@ -1,4 +1,5 @@
 import { useRecommendations } from "@/hooks/useRecommendations";
+import { PremiumGamesSection } from "./PremiumGamesSection";
 import { TrendingGamesSection } from "./TrendingGamesSection";
 import { HomeCategorySections } from "./CategoryShowcaseSection";
 import { GamesCatalogSection } from "./GamesCatalogSection";
@@ -21,9 +22,9 @@ export function GamesHub({ searchQuery = "" }: GamesHubProps) {
   } = useRecommendations();
 
   if (!isWarm) {
-    // Cold start — static layout for first-time / new users
     return (
       <>
+        <PremiumGamesSection />
         <TrendingGamesSection overrideGames={trendingGames} />
         <HomeCategorySections />
         <GamesCatalogSection searchQuery={searchQuery} />
@@ -31,9 +32,9 @@ export function GamesHub({ searchQuery = "" }: GamesHubProps) {
     );
   }
 
-  // Warm profile — personalized layout
   return (
     <>
+      <PremiumGamesSection />
       {recentlyPlayed.length > 0 && <RecentlyPlayedSection games={recentlyPlayed} />}
       <RecommendedGamesSection games={recommendations} playStyle={playStyle} />
       {becauseYouPlayed && (

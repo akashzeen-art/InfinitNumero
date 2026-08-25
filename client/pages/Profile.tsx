@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { useRef, useState } from "react";
 import {
-  Gamepad2, LogOut, Zap, Puzzle, Swords, Star, Flame,
+  Gamepad2, LogOut, Zap, Puzzle, Swords, Star, Flame, Crown,
   Clock, History, ChevronRight, Brain, Cpu, Activity,
   TrendingUp, Shield, Sparkles, Radio,
 } from "lucide-react";
@@ -20,6 +20,7 @@ const CAT_META: Record<string, { icon: React.ReactNode; color: string; glow: str
   Puzzle:         { icon: <Puzzle className="w-4 h-4" />, color: "from-cyan-500 to-blue-600",    glow: "shadow-cyan-500/40" },
   "Easy to Play": { icon: <Star   className="w-4 h-4" />, color: "from-emerald-400 to-teal-500", glow: "shadow-emerald-500/40" },
   "Top 10 Games": { icon: <Flame  className="w-4 h-4" />, color: "from-amber-400 to-orange-500", glow: "shadow-amber-500/40" },
+  Premium:        { icon: <Crown  className="w-4 h-4" />, color: "from-yellow-400 to-amber-500", glow: "shadow-yellow-500/40" },
 };
 
 const STYLE_META: Record<string, { icon: React.ReactNode; color: string; particle: string }> = {

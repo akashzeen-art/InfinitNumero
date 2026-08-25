@@ -92,7 +92,9 @@ export function HomeCategorySections({ personalizedOrder = false }: { personaliz
       useRecommendations()
     : { personalizedSectionOrder: null };
 
-  const sections = HOME_CATEGORY_SECTIONS.filter((c) => c.id !== "Top 10 Games");
+  const sections = HOME_CATEGORY_SECTIONS.filter(
+    (c) => c.id !== "Top 10 Games" && c.id !== "Premium"
+  );
   const ordered = personalizedSectionOrder
     ? [...sections].sort((a, b) => personalizedSectionOrder.indexOf(a.id) - personalizedSectionOrder.indexOf(b.id))
     : sections;

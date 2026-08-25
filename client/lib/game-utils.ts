@@ -1,6 +1,6 @@
 import { gamesData, Game } from "@/data/games";
 import type { LucideIcon } from "lucide-react";
-import { Flame, Gamepad2, Puzzle, Swords, Star, Zap } from "lucide-react";
+import { Flame, Gamepad2, Puzzle, Swords, Star, Zap, Crown } from "lucide-react";
 
 export function getGamesByCategory(category: string, limit?: number): Game[] {
   const list = gamesData.filter((g) => g.categories.includes(category));
@@ -9,6 +9,7 @@ export function getGamesByCategory(category: string, limit?: number): Game[] {
 
 const CATEGORY_ORDER = [
   "All Games",
+  "Premium",
   "Top 10 Games",
   "Action",
   "Arcade",
@@ -38,6 +39,16 @@ export type CategoryConfig = {
 };
 
 export const HOME_CATEGORY_SECTIONS: CategoryConfig[] = [
+  {
+    id: "Premium",
+    label: "Premium Games",
+    shortLabel: "Premium",
+    description: "Exclusive licensed titles and premium picks",
+    icon: Crown,
+    gradient: "from-amber-400 via-yellow-500 to-orange-500",
+    accentBg: "bg-amber-50",
+    path: "/category/Premium",
+  },
   {
     id: "Top 10 Games",
     label: "Top 10 Games",
@@ -95,6 +106,7 @@ export const CATEGORY_FILTER_CONFIG: Record<
   { icon: LucideIcon; gradient?: string }
 > = {
   "All Games": { icon: Gamepad2 },
+  Premium: { icon: Crown },
   "Top 10 Games": { icon: Flame },
   Arcade: { icon: Zap },
   Puzzle: { icon: Puzzle },
