@@ -11,17 +11,17 @@ echo "📥 Pulling latest from GitHub..."
 git pull origin main
 
 echo "📦 Installing dependencies..."
-npm install -g pnpm --silent
 pnpm install --frozen-lockfile
 
 echo "⚙️  Generating Prisma client..."
-npx prisma generate
+pnpm exec prisma generate
 
 echo "🔨 Building client + server..."
-pnpm build
+pnpm run build:client
+pnpm run build:server
 
 echo "🗄️  Running Prisma migrations..."
-npx prisma migrate deploy
+pnpm exec prisma migrate deploy
 
 echo "♻️  Restarting PM2..."
 pm2 describe infinityplay > /dev/null 2>&1 \
