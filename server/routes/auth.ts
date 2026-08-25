@@ -6,26 +6,37 @@ const router = Router();
 
 // POST /api/auth/login — MSISDN-only login, creates user if not exists
 router.post("/login", (async (req, res) => {
-  const { msisdn } = req.body as { msisdn?: string };
+  try {
+    const { msisdn } = req.body as { msisdn?: string };
 
-  if (!msisdn || !/^\+?[1-9]\d{6,14}$/.test(msisdn.replace(/\s/g, ""))) {
-    return res.status(400).json({ error: "Invalid mobile number" });
+    if (!msisdn || !/^\+?[1-9]\d{6,14}$/.test(msisdn.replace(/\s/g, ""))) {
+      return res.status(400).json({ error: "Invalid mobile number" });
+    }
+
+    if (!process.env.DATABASE_URL) {
+      console.error("[auth/login] DATABASE_URL is not set");
+      return res.status(500).json({ error: "Server misconfigured: DATABASE_URL missing" });
+    }
+
+    const normalized = msisdn.replace(/\s/g, "");
+
+    const user = await prisma.user.upsert({
+      where: { msisdn: normalized },
+      update: { lastActive: new Date() },
+      create: {
+        msisdn: normalized,
+        aiProfile: { create: {} },
+      },
+      include: { aiProfile: true },
+    });
+
+    const token = signToken(user.id);
+    res.json({ token, user: { id: user.id, msisdn: user.msisdn, aiProfile: user.aiProfile } });
+  } catch (err) {
+    console.error("[auth/login] failed:", err);
+    const message = err instanceof Error ? err.message : "Login failed";
+    res.status(500).json({ error: message });
   }
-
-  const normalized = msisdn.replace(/\s/g, "");
-
-  const user = await prisma.user.upsert({
-    where: { msisdn: normalized },
-    update: { lastActive: new Date() },
-    create: {
-      msisdn: normalized,
-      aiProfile: { create: {} },
-    },
-    include: { aiProfile: true },
-  });
-
-  const token = signToken(user.id);
-  res.json({ token, user: { id: user.id, msisdn: user.msisdn, aiProfile: user.aiProfile } });
 }) as RequestHandler);
 
 // GET /api/auth/me — validate token and return current user
