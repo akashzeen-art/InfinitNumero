@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "node:path";
 
 // Client-only Vite config for production builds (Vercel/Netlify).
-// Keeps server/prisma code out of the config bundle.
+// Keeps server code out of the config bundle.
 export default defineConfig({
   build: {
     outDir: "dist/spa",

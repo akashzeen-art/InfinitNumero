@@ -9,6 +9,7 @@ import {
 } from "react";
 
 const TOKEN_KEY = "InfinityPlay-token";
+const USER_KEY = "InfinityPlay-user";
 
 export interface AuthUser {
   id: string;
@@ -25,16 +26,35 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-async function apiFetch(path: string, options?: RequestInit) {
-  const res = await fetch(path, {
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    ...options,
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: "Request failed" }));
-    throw new Error(err.error ?? "Request failed");
+function normalizeMsisdn(msisdn: string) {
+  return msisdn.replace(/\s/g, "");
+}
+
+function isValidMsisdn(msisdn: string) {
+  return /^\+?[1-9]\d{6,14}$/.test(normalizeMsisdn(msisdn));
+}
+
+/** Stable local user id from MSISDN — no database required. */
+function userFromMsisdn(msisdn: string): AuthUser {
+  const normalized = normalizeMsisdn(msisdn);
+  const id = `local_${btoa(normalized).replace(/=+$/g, "")}`;
+  return { id, msisdn: normalized };
+}
+
+function createLocalToken(user: AuthUser) {
+  return `local.${btoa(JSON.stringify({ userId: user.id, msisdn: user.msisdn }))}`;
+}
+
+function readStoredUser(): AuthUser | null {
+  try {
+    const raw = localStorage.getItem(USER_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as AuthUser;
+    if (!parsed?.id || !parsed?.msisdn) return null;
+    return parsed;
+  } catch {
+    return null;
   }
-  return res.json();
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -42,19 +62,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
   const [isLoading, setIsLoading] = useState(true);
 
+  const persistSession = (nextUser: AuthUser) => {
+    const nextToken = createLocalToken(nextUser);
+    localStorage.setItem(TOKEN_KEY, nextToken);
+    localStorage.setItem(USER_KEY, JSON.stringify(nextUser));
+    setToken(nextToken);
+    setUser(nextUser);
+  };
+
+  const loginWithMsisdn = async (msisdn: string) => {
+    if (!isValidMsisdn(msisdn)) {
+      throw new Error("Invalid mobile number");
+    }
+    persistSession(userFromMsisdn(msisdn));
+  };
+
   // Restore session on mount — also check for ?msisdn= in URL for silent login
   useEffect(() => {
     const init = async () => {
-      // Auto-detect MSISDN from URL param (telecom partner redirects)
       const params = new URLSearchParams(window.location.search);
       const urlMsisdn = params.get("msisdn");
 
       if (urlMsisdn && !token) {
         try {
           await loginWithMsisdn(urlMsisdn);
-          // Clean the URL param without reload
           params.delete("msisdn");
-          const newUrl = `${window.location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
+          const newUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
           window.history.replaceState({}, "", newUrl);
         } catch {
           // Invalid MSISDN in URL — fall through to normal flow
@@ -68,49 +101,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      try {
-        const data = await apiFetch("/api/auth/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser({ id: data.id, msisdn: data.msisdn });
-      } catch {
-        // Token expired or invalid — clear it
+      const stored = readStoredUser();
+      if (stored) {
+        setUser(stored);
+      } else {
         localStorage.removeItem(TOKEN_KEY);
         setToken(null);
-      } finally {
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
     init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const loginWithMsisdn = async (msisdn: string) => {
-    const data = await apiFetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ msisdn }),
-    });
-    localStorage.setItem(TOKEN_KEY, data.token);
-    setToken(data.token);
-    setUser({ id: data.user.id, msisdn: data.user.msisdn });
-    return data;
-  };
-
   const login = useCallback(async (msisdn: string) => {
     await loginWithMsisdn(msisdn);
   }, []);
 
-  const logout = useCallback(async () => {
-    if (token) {
-      await apiFetch("/api/auth/logout", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      }).catch(() => {});
-    }
+  const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
     setToken(null);
     setUser(null);
-  }, [token]);
+  }, []);
 
   const value = useMemo(
     () => ({ user, token, isLoading, login, logout }),
