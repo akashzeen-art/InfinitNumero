@@ -19,7 +19,7 @@ export const translations = {
       headline2: "Win.",
       headline3: "Repeat.",
       subtitle: "The ultimate AI-powered gaming hub. Arcade, puzzles & action — instant play, no download.",
-      playFree: "Play Free Now",
+      playFree: "Play Now",
       categories: "Categories",
       gamesLabel: "Games",
       playersLabel: "Players",

@@ -264,7 +264,7 @@ export default function Categories() {
                 transition={{ delay: 0.1 }}
                 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-outfit mb-4"
               >
-                <span className="text-gray-900">Find Your </span>
+                <span className="text-white">Find Your </span>
                 <span className="text-gradient">Perfect Game</span>
               </motion.h1>
 
