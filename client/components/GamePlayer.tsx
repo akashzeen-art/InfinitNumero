@@ -24,7 +24,7 @@ export function GamePlayer() {
           transition={{ duration: 0.2 }}
           role="dialog"
           aria-modal="true"
-          aria-label={`Playing ${activeGame.name}`}
+          aria-label="Playing game"
         >
           <header className="shrink-0 flex items-center gap-3 px-3 sm:px-5 h-14 sm:h-16 border-b border-white/10 bg-gray-950/95 backdrop-blur-md">
             <button
@@ -37,11 +37,7 @@ export function GamePlayer() {
               <span className="hidden sm:inline">Back</span>
             </button>
 
-            <div className="flex-1 min-w-0 text-center sm:text-left">
-              <h2 className="text-sm sm:text-base font-bold text-white truncate">
-                {activeGame.name}
-              </h2>
-            </div>
+            <div className="flex-1" />
 
             <button
               type="button"
@@ -63,7 +59,7 @@ export function GamePlayer() {
             <iframe
               key={activeGame.game_url}
               src={activeGame.game_url}
-              title={activeGame.name}
+              title="Game"
               className={cn(
                 "w-full h-full border-0",
                 loading ? "opacity-0" : "opacity-100"

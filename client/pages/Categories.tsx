@@ -475,7 +475,7 @@ export default function Categories() {
                       game,
                       decoded === "Premium" ? "portrait" : "square"
                     )}
-                    alt={game.name}
+                    alt=""
                     className="w-full h-full object-cover"
                   />
                 </button>

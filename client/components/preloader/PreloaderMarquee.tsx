@@ -11,9 +11,6 @@ function TickerRow({ reverse = false }: { reverse?: boolean }) {
             alt=""
             className="w-7 h-7 rounded-lg object-cover border border-white/10 shadow-sm"
           />
-          <span className="text-[9px] font-bold text-violet-300/80 uppercase tracking-[0.2em]">
-            {g.name}
-          </span>
           <span className="text-violet-600/40 text-[8px]">✦</span>
         </div>
       ))}
