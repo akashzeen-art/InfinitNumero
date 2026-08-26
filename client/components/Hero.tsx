@@ -1,59 +1,124 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef, type TouchEvent } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { gamesData } from "@/data/games";
 import { useGamePlayer } from "@/contexts/GamePlayerContext";
-import { useReducedMotion } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useLang } from "@/i18n/LanguageContext";
 import { getGameThumbnail, getGamesByCategory } from "@/lib/game-utils";
 import { Play, ChevronRight, Crown } from "lucide-react";
 
+const SLIDE_MS = 4500;
+
 export function Hero() {
   const { playGame } = useGamePlayer();
-  const reduced = useReducedMotion();
+  const isMobile = useIsMobile();
   const { t } = useLang();
   const [active, setActive] = useState(0);
+  const [prefersReduced, setPrefersReduced] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
-  const premium = getGamesByCategory("Premium").slice(0, 6);
-  const games = premium.length >= 4 ? premium : gamesData.slice(0, 6);
-  const hero = games[active];
-  const heroSrc = hero ? getGameThumbnail(hero, "landscape") : "";
+  const games = useMemo(() => {
+    const premium = getGamesByCategory("Premium").slice(0, 8);
+    return premium.length >= 4 ? premium : gamesData.slice(0, 6);
+  }, []);
 
+  const orientation = isMobile ? "portrait" : "landscape";
+  const hero = games[active] ?? games[0];
+  const heroSrc = hero ? getGameThumbnail(hero, orientation) : "";
+
+  // Prefers-reduced-motion only (do NOT pause autoplay on mobile)
   useEffect(() => {
-    if (reduced || games.length < 2) return;
-    const id = setInterval(() => setActive((p) => (p + 1) % games.length), 5200);
-    return () => clearInterval(id);
-  }, [games.length, reduced]);
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReduced(mql.matches);
+    const onChange = () => setPrefersReduced(mql.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  // Pause when tab is hidden
+  useEffect(() => {
+    const onVis = () => setPaused(document.hidden);
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
+  // Keep index valid if list length changes
+  useEffect(() => {
+    setActive((i) => (games.length ? i % games.length : 0));
+  }, [games.length]);
+
+  // Auto-advance slider
+  useEffect(() => {
+    if (prefersReduced || paused || games.length < 2) return;
+    const id = window.setInterval(() => {
+      setActive((p) => (p + 1) % games.length);
+    }, SLIDE_MS);
+    return () => window.clearInterval(id);
+  }, [games.length, prefersReduced, paused]);
+
+  // Preload next slide (portrait + landscape so orientation swaps stay smooth)
+  useEffect(() => {
+    if (games.length < 2) return;
+    const next = games[(active + 1) % games.length];
+    const urls = [
+      getGameThumbnail(next, "portrait"),
+      getGameThumbnail(next, "landscape"),
+    ];
+    urls.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [active, games]);
+
+  const onTouchStart = (e: TouchEvent) => {
+    touchStartX.current = e.touches[0]?.clientX ?? null;
+  };
+
+  const onTouchEnd = (e: TouchEvent) => {
+    if (touchStartX.current == null || games.length < 2) return;
+    const dx = (e.changedTouches[0]?.clientX ?? 0) - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) < 48) return;
+    setActive((p) =>
+      dx < 0 ? (p + 1) % games.length : (p - 1 + games.length) % games.length
+    );
+  };
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col justify-end overflow-hidden">
-      {/* Full-bleed rotating landscape art */}
+    <section
+      className="relative min-h-[100svh] flex flex-col justify-end overflow-hidden"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      {/* Full-bleed rotating art — portrait on mobile, landscape on desktop */}
       <div className="absolute inset-0">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.img
-            key={hero?.name}
+            key={`${hero?.name}-${orientation}`}
             src={heroSrc}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-            initial={{ opacity: 0, scale: 1.12 }}
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            initial={{ opacity: 0, scale: 1.06 }}
             animate={{
               opacity: 1,
-              scale: reduced ? 1 : 1.04,
+              scale: prefersReduced ? 1 : 1.05,
             }}
             exit={{ opacity: 0 }}
             transition={{
-              opacity: { duration: 1 },
-              scale: { duration: 5.2, ease: "linear" },
+              opacity: { duration: 0.7, ease: "easeInOut" },
+              scale: { duration: SLIDE_MS / 1000, ease: "linear" },
             }}
           />
         </AnimatePresence>
 
-        {/* Depth overlays */}
         <div
           className="absolute inset-0"
           style={{
-            background:
-              "linear-gradient(180deg, rgba(3,7,18,0.45) 0%, rgba(3,7,18,0.2) 32%, rgba(3,7,18,0.55) 62%, rgba(3,7,18,0.97) 88%, #030712 100%)",
+            background: isMobile
+              ? "linear-gradient(180deg, rgba(3,7,18,0.35) 0%, rgba(3,7,18,0.15) 28%, rgba(3,7,18,0.55) 58%, rgba(3,7,18,0.96) 86%, #030712 100%)"
+              : "linear-gradient(180deg, rgba(3,7,18,0.45) 0%, rgba(3,7,18,0.2) 32%, rgba(3,7,18,0.55) 62%, rgba(3,7,18,0.97) 88%, #030712 100%)",
           }}
         />
         <div
@@ -70,14 +135,6 @@ export function Hero() {
               "radial-gradient(ellipse at center, transparent 40%, rgba(3,7,18,0.55) 100%)",
           }}
         />
-        {/* Soft film grain feel */}
-        <div
-          className="absolute inset-0 opacity-[0.07] mix-blend-overlay pointer-events-none"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          }}
-        />
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24 pt-28">
@@ -92,9 +149,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.7 }}
-            style={{
-              textShadow: "0 0 60px rgba(34,211,238,0.35)",
-            }}
+            style={{ textShadow: "0 0 60px rgba(34,211,238,0.35)" }}
           >
             InfinityPlay
           </motion.p>
@@ -147,6 +202,31 @@ export function Hero() {
               <ChevronRight className="w-4 h-4" />
             </Link>
           </motion.div>
+
+          {/* Progress dots — visual only, no game names */}
+          {games.length > 1 && (
+            <div
+              className="flex items-center gap-1.5 mt-8"
+              aria-hidden="true"
+            >
+              {games.map((g, i) => (
+                <button
+                  key={g.name}
+                  type="button"
+                  aria-label={`Slide ${i + 1}`}
+                  onClick={() => setActive(i)}
+                  className="h-1 rounded-full transition-all duration-300"
+                  style={{
+                    width: i === active ? 22 : 7,
+                    background:
+                      i === active
+                        ? "linear-gradient(90deg,#22d3ee,#a78bfa)"
+                        : "rgba(255,255,255,0.28)",
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </motion.div>
       </div>
     </section>
