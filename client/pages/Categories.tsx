@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGamePlayer } from "@/contexts/GamePlayerContext";
+import { CosmicBackground } from "@/components/CosmicBackground";
 
 type CategoryMeta = {
   icon: React.ReactNode;
@@ -231,7 +232,9 @@ export default function Categories() {
 
   if (!category) {
     return (
-      <div className="page-shell mesh-bg min-h-screen">
+      <div className="page-shell min-h-screen">
+        <CosmicBackground />
+        <div className="relative z-10">
         <Navbar onSearch={setSearchQuery} />
 
         {/* Hero */}
@@ -372,12 +375,15 @@ export default function Categories() {
         </section>
 
         <Footer />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="page-shell min-h-screen">
+      <CosmicBackground />
+      <div className="relative z-10">
       <Navbar onSearch={setSearchQuery} />
 
       {/* Category hero */}
@@ -536,6 +542,7 @@ export default function Categories() {
       </section>
 
       <Footer />
+      </div>
     </div>
   );
 }

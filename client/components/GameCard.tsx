@@ -37,7 +37,7 @@ export function GameCard({ game, onPlay, featured }: GameCardProps) {
   return (
     <article
       ref={ref}
-      className={cn("group game-card aspect-square", featured && "ring-1 ring-orange-500/40")}
+      className={cn("group game-card aspect-square", featured && "ring-1 ring-cyan-400/35")}
       onClick={handlePlay}
       role="button"
       tabIndex={0}

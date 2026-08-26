@@ -65,7 +65,7 @@ export function Navbar({ onSearch }: NavbarProps) {
       className={cn(
         "px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200",
         match
-          ? "text-violet-400 bg-violet-500/15"
+          ? "text-cyan-300 bg-cyan-500/15"
           : "text-white/60 hover:text-white hover:bg-white/8"
       )}
     >
@@ -81,14 +81,14 @@ export function Navbar({ onSearch }: NavbarProps) {
           ? "backdrop-blur-xl border-b shadow-sm"
           : "bg-transparent"
       )}
-      style={isScrolled ? { background: "rgba(5,2,15,0.85)", borderColor: "rgba(139,92,246,0.2)" } : {}}
+      style={isScrolled ? { background: "rgba(3,7,18,0.82)", borderColor: "rgba(34,211,238,0.2)" } : {}}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-[4.25rem]">
 
           {/* Logo */}
           <ScrollLink to="/" className="flex items-center gap-2.5 group shrink-0">
-            <div className="gradient-brand text-white rounded-xl p-2.5 shadow-md shadow-violet-500/30 group-hover:shadow-violet-500/50 group-hover:scale-105 transition-all duration-300">
+            <div className="gradient-brand text-white rounded-xl p-2.5 shadow-md shadow-cyan-500/25 group-hover:shadow-cyan-400/40 group-hover:scale-105 transition-all duration-300">
               <Gamepad2 className="w-5 h-5" strokeWidth={2.5} />
             </div>
             <span className="font-outfit font-extrabold text-xl text-gradient hidden sm:block">

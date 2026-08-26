@@ -13,6 +13,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useAIProfile } from "@/context/AIProfileContext";
 import { gamesData } from "@/data/games";
 import { useLang } from "@/i18n/LanguageContext";
+import { CosmicBackground } from "@/components/CosmicBackground";
 
 const CAT_META: Record<string, { icon: React.ReactNode; color: string; glow: string }> = {
   Action:         { icon: <Swords className="w-4 h-4" />, color: "from-red-500 to-orange-500",   glow: "shadow-red-500/40" },
@@ -102,20 +103,8 @@ export default function Profile() {
   ].filter(Boolean) as string[];
 
   return (
-    <div className="min-h-screen bg-[#05020f] overflow-x-hidden">
-      {/* bg */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_20%,rgba(139,92,246,0.15),transparent_55%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_80%,rgba(236,72,153,0.1),transparent_55%)]" />
-        <div className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: "linear-gradient(rgba(139,92,246,1) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,1) 1px,transparent 1px)", backgroundSize: "60px 60px" }} />
-        <motion.div
-          className="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent"
-          animate={{ top: ["0%", "100%"] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        />
-      </div>
-
+    <div className="page-shell min-h-screen overflow-x-hidden">
+      <CosmicBackground />
       <div className="relative z-10">
         <Navbar />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-6">
@@ -338,7 +327,7 @@ export default function Profile() {
                 className="text-6xl mb-5 block">🎮</motion.div>
               <h3 className="text-xl font-black text-white mb-2 font-outfit">{t.profile.emptyTitle}</h3>
               <p className="text-white/40 mb-7 text-sm max-w-xs mx-auto">{t.profile.emptySubtitle}</p>
-              <Link to="/" className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-400 text-white font-bold text-sm shadow-lg shadow-violet-500/30 hover:scale-105 transition-transform">
+              <Link to="/" className="btn-primary px-6 py-3 text-sm">
                 <ChevronRight className="w-4 h-4" /> {t.profile.startPlaying}
               </Link>
             </motion.div>

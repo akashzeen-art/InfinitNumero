@@ -24,19 +24,19 @@ export function TrendingGamesSection({ overrideGames }: TrendingGamesSectionProp
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-10">
           <div className="flex items-start gap-4">
             <div className="shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
-              style={{ background: "linear-gradient(135deg, #f97316, #ef4444)", boxShadow: "0 8px 24px rgba(249,115,22,0.4)" }}>
+              style={{ background: "linear-gradient(135deg, #f97316, #ef4444)", boxShadow: "0 8px 24px rgba(249,115,22,0.35)" }}>
               <Flame className="w-6 h-6 text-white" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-orange-400 mb-1.5">
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-orange-300 mb-1.5">
                 <TrendingUp className="w-3 h-3" /> {t.sections.trendingBadge}
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold font-outfit text-white">{t.sections.trendingTitle}</h2>
-              <p className="text-white/35 text-sm mt-0.5">{t.sections.trendingSubtitle}</p>
+              <p className="text-white/40 text-sm mt-0.5">{t.sections.trendingSubtitle}</p>
             </div>
           </div>
           <Link to="/category/Top%2010%20Games"
-            className="inline-flex items-center gap-1.5 text-sm font-bold text-orange-400 hover:text-orange-300 hover:gap-2.5 transition-all shrink-0">
+            className="inline-flex items-center gap-1.5 text-sm font-bold text-cyan-300 hover:text-cyan-200 hover:gap-2.5 transition-all shrink-0">
             {t.sections.seeAll} <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
