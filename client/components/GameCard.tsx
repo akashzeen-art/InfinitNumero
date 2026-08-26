@@ -3,8 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { Play, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGamePlayer } from "@/contexts/GamePlayerContext";
-import { useLang } from "@/i18n/LanguageContext";
-import { getGameName } from "@/i18n/gameNames";
 import { getGameThumbnail, type ThumbOrientation } from "@/lib/game-utils";
 
 interface GameCardProps {
@@ -22,8 +20,6 @@ export function GameCard({
   orientation = "square",
 }: GameCardProps) {
   const { playGame } = useGamePlayer();
-  const { lang } = useLang();
-  const displayName = getGameName(game.name, lang);
   const handlePlay = () => (onPlay ?? playGame)(game);
   const thumb = getGameThumbnail(game, orientation);
 
@@ -66,6 +62,7 @@ export function GameCard({
       onClick={handlePlay}
       role="button"
       tabIndex={0}
+      aria-label="Play game"
       onKeyDown={(e) => e.key === "Enter" && handlePlay()}
     >
       {(!loaded || !inView) && !error && (
@@ -83,15 +80,12 @@ export function GameCard({
           className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl p-3"
           style={{ background: "rgba(139,92,246,0.08)" }}
         >
-          <span className="text-3xl mb-2">🎮</span>
-          <p className="text-xs font-bold text-white/60 text-center line-clamp-2">
-            {displayName}
-          </p>
+          <Play className="w-8 h-8 text-white/40" />
         </div>
       ) : inView ? (
         <img
           src={thumb}
-          alt={displayName}
+          alt=""
           decoding="async"
           className={cn(
             "game-card-image rounded-2xl transition-opacity duration-300",
@@ -112,40 +106,27 @@ export function GameCard({
       )}
 
       <div
-        className="absolute inset-x-0 bottom-0 h-3/4 rounded-b-2xl opacity-80 group-hover:opacity-100 transition-opacity"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(5,2,15,0.95) 0%, rgba(5,2,15,0.5) 50%, transparent 100%)",
-        }}
-      />
-
-      <div
         className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         style={{
+          background:
+            "linear-gradient(to top, rgba(5,2,15,0.35) 0%, transparent 45%)",
           boxShadow:
             "inset 0 0 0 1px rgba(139,92,246,0.5), 0 0 30px rgba(139,92,246,0.2)",
         }}
       />
 
       {loaded && !error && (
-        <>
-          <div className="absolute inset-x-0 bottom-0 p-3 z-10">
-            <h3 className="text-white font-bold text-xs sm:text-sm leading-snug line-clamp-2 drop-shadow-lg">
-              {displayName}
-            </h3>
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+          <div
+            className="w-11 h-11 rounded-full flex items-center justify-center shadow-2xl scale-90 group-hover:scale-100 transition-transform"
+            style={{
+              background: "rgba(139,92,246,0.9)",
+              boxShadow: "0 0 30px rgba(139,92,246,0.6)",
+            }}
+          >
+            <Play className="w-5 h-5 text-white fill-white ml-0.5" />
           </div>
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
-            <div
-              className="w-11 h-11 rounded-full flex items-center justify-center shadow-2xl scale-90 group-hover:scale-100 transition-transform"
-              style={{
-                background: "rgba(139,92,246,0.9)",
-                boxShadow: "0 0 30px rgba(139,92,246,0.6)",
-              }}
-            >
-              <Play className="w-5 h-5 text-white fill-white ml-0.5" />
-            </div>
-          </div>
-        </>
+        </div>
       )}
     </article>
   );

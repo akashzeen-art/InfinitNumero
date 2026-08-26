@@ -128,7 +128,7 @@ export function PreloaderShowcase({ featuredGame, progress, exiting }: Preloader
                 <motion.img
                   key={featuredGame.name}
                   src={featuredGame.thumbnail_url}
-                  alt={featuredGame.name}
+                  alt=""
                   className="absolute inset-0 w-full h-full object-cover"
                   initial={{ opacity: 0, scale: 1.1, filter: "blur(8px)" }}
                   animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
@@ -137,13 +137,7 @@ export function PreloaderShowcase({ featuredGame, progress, exiting }: Preloader
                 />
               </AnimatePresence>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-transparent" />
-
-              <div className="absolute inset-x-0 bottom-0 p-3">
-                <p className="text-white font-bold text-sm leading-tight line-clamp-2 drop-shadow-lg">
-                  {featuredGame.name}
-                </p>
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
               <div className="absolute inset-0 flex items-center justify-center">
                 <motion.div

@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Crown, ChevronRight, Sparkles, Play } from "lucide-react";
 import { getGamesByCategory, getGameThumbnail } from "@/lib/game-utils";
 import { useLang } from "@/i18n/LanguageContext";
-import { getGameName } from "@/i18n/gameNames";
 import { useGamePlayer } from "@/contexts/GamePlayerContext";
 import type { Game } from "@/data/games";
 
@@ -21,13 +20,12 @@ function PremiumTile({
   index: number;
 }) {
   const { playGame } = useGamePlayer();
-  const { lang } = useLang();
-  const name = getGameName(game.name, lang);
   const src = getGameThumbnail(game, orientation);
 
   return (
     <motion.button
       type="button"
+      aria-label="Play premium game"
       onClick={() => playGame(game)}
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -46,7 +44,7 @@ function PremiumTile({
     >
       <img
         src={src}
-        alt={name}
+        alt=""
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         loading="lazy"
       />
@@ -54,8 +52,8 @@ function PremiumTile({
         className="absolute inset-0"
         style={{
           background: featured
-            ? "linear-gradient(160deg, rgba(3,7,18,0.12) 0%, rgba(3,7,18,0.35) 50%, rgba(3,7,18,0.92) 100%)"
-            : "linear-gradient(to top, rgba(3,7,18,0.92) 0%, rgba(3,7,18,0.35) 55%, transparent 100%)",
+            ? "linear-gradient(160deg, rgba(3,7,18,0.08) 0%, rgba(3,7,18,0.2) 55%, rgba(3,7,18,0.55) 100%)"
+            : "linear-gradient(to top, rgba(3,7,18,0.45) 0%, transparent 50%)",
         }}
       />
 
@@ -66,30 +64,16 @@ function PremiumTile({
         <Crown className="w-2.5 h-2.5" /> Premium
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 z-10">
-        <h3
-          className={
-            featured
-              ? "text-white font-extrabold text-lg sm:text-2xl leading-tight line-clamp-2 font-outfit"
-              : "text-white font-bold text-xs sm:text-sm leading-snug line-clamp-2"
-          }
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <span
+          className="w-11 h-11 rounded-full flex items-center justify-center"
+          style={{
+            background: "rgba(251,191,36,0.92)",
+            boxShadow: "0 0 28px rgba(245,158,11,0.45)",
+          }}
         >
-          {name}
-        </h3>
-        {featured && (
-          <span className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-amber-200/90">
-            <span
-              className="w-8 h-8 rounded-full flex items-center justify-center"
-              style={{
-                background: "rgba(251,191,36,0.2)",
-                border: "1px solid rgba(251,191,36,0.35)",
-              }}
-            >
-              <Play className="w-3.5 h-3.5 fill-current" />
-            </span>
-            Play now
-          </span>
-        )}
+          <Play className="w-5 h-5 text-slate-950 fill-slate-950 ml-0.5" />
+        </span>
       </div>
 
       <div
