@@ -2,8 +2,47 @@ import { gamesData, Game } from "@/data/games";
 import type { LucideIcon } from "lucide-react";
 import { Flame, Gamepad2, Puzzle, Swords, Star, Zap, Crown } from "lucide-react";
 
+/** Premium titles are exclusive — only shown in the Premium section / Premium category. */
+export function isPremiumGame(game: Game): boolean {
+  return game.categories.includes("Premium");
+}
+
+export type ThumbOrientation = "square" | "portrait" | "landscape";
+
+/** Encode local asset paths that contain spaces (Landscape / Portrait folders). */
+export function encodeAssetUrl(url: string): string {
+  if (!url.startsWith("/")) return url;
+  return url
+    .split("/")
+    .map((seg, i) => (i === 0 || seg === "" ? seg : encodeURIComponent(seg)))
+    .join("/");
+}
+
+/** Pick square / portrait / landscape art with fallbacks. */
+export function getGameThumbnail(
+  game: Game,
+  orientation: ThumbOrientation = "square"
+): string {
+  const raw =
+    orientation === "landscape" && game.landscape_url
+      ? game.landscape_url
+      : orientation === "portrait" && game.portrait_url
+        ? game.portrait_url
+        : game.thumbnail_url;
+  return encodeAssetUrl(raw);
+}
+
+export function getStandardGames(): Game[] {
+  return gamesData.filter((g) => !isPremiumGame(g));
+}
+
 export function getGamesByCategory(category: string, limit?: number): Game[] {
-  const list = gamesData.filter((g) => g.categories.includes(category));
+  const list =
+    category === "Premium"
+      ? gamesData.filter((g) => isPremiumGame(g))
+      : gamesData.filter(
+          (g) => !isPremiumGame(g) && g.categories.includes(category)
+        );
   return limit ? list.slice(0, limit) : list;
 }
 
@@ -121,11 +160,21 @@ export function filterGames(
 ): Game[] {
   const q = searchQuery.trim().toLowerCase();
   return games.filter((game) => {
+    // Keep Premium out of every catalog view except the Premium filter
+    if (category === "Premium") {
+      if (!isPremiumGame(game)) return false;
+    } else if (isPremiumGame(game)) {
+      return false;
+    }
+
     const matchSearch =
       !q ||
       game.name.toLowerCase().includes(q) ||
       game.categories.some((c) => c.toLowerCase().includes(q));
-    const matchCat = category === "All Games" || game.categories.includes(category);
+    const matchCat =
+      category === "All Games" ||
+      category === "Premium" ||
+      game.categories.includes(category);
     return matchSearch && matchCat;
   });
 }

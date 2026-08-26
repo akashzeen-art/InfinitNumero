@@ -1,8 +1,11 @@
 import { Game, gamesData } from "@/data/games";
 import { AIProfile } from "./profile-engine";
+import { isPremiumGame } from "@/lib/game-utils";
 
 const TRENDING_GAMES = new Set(
-  gamesData.filter((g) => g.categories.includes("Top 10 Games")).map((g) => g.name)
+  gamesData
+    .filter((g) => !isPremiumGame(g) && g.categories.includes("Top 10 Games"))
+    .map((g) => g.name)
 );
 
 /**
@@ -15,7 +18,7 @@ function scoreGame(game: Game, profile: AIProfile): number {
   // Category affinity (0–100 range)
   const totalInterest = Object.values(interests).reduce((s, v) => s + v, 0) || 1;
   const categoryAffinity = game.categories
-    .filter((c) => c !== "All Games")
+    .filter((c) => c !== "All Games" && c !== "Premium")
     .reduce((sum, cat) => sum + (interests[cat] ?? 0), 0);
   const affinityScore = (categoryAffinity / totalInterest) * 100;
 
@@ -35,6 +38,7 @@ function scoreGame(game: Game, profile: AIProfile): number {
 /** Returns top N recommended games, excluding already-shown recently played */
 export function getRecommendations(profile: AIProfile, limit = 20): Game[] {
   return [...gamesData]
+    .filter((game) => !isPremiumGame(game))
     .map((game) => ({ game, score: scoreGame(game, profile) }))
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
@@ -47,7 +51,7 @@ export function getBecauseYouPlayedGames(
   limit = 8
 ): { category: string; games: Game[] } | null {
   const topEntry = Object.entries(profile.interests)
-    .filter(([cat]) => cat !== "All Games")
+    .filter(([cat]) => cat !== "All Games" && cat !== "Premium")
     .sort((a, b) => b[1] - a[1])[0];
 
   if (!topEntry) return null;
@@ -56,6 +60,7 @@ export function getBecauseYouPlayedGames(
   const games = gamesData
     .filter(
       (g) =>
+        !isPremiumGame(g) &&
         g.categories.includes(category) &&
         !profile.recentlyPlayed.slice(0, 5).includes(g.name)
     )

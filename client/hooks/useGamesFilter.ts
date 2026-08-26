@@ -4,7 +4,11 @@ import { filterGames, getAllCategories } from "@/lib/game-utils";
 
 export function useGamesFilter(externalSearch = "") {
   const [selectedCategory, setSelectedCategory] = useState("All Games");
-  const categories = useMemo(() => getAllCategories(), []);
+  // Premium lives only in its dedicated section — hide from catalog chips
+  const categories = useMemo(
+    () => getAllCategories().filter((c) => c !== "Premium"),
+    []
+  );
 
   const filteredGames = useMemo(
     () => filterGames(gamesData, externalSearch, selectedCategory),

@@ -1,4 +1,5 @@
 import { Game, gamesData } from "@/data/games";
+import { isPremiumGame } from "@/lib/game-utils";
 
 const STORAGE_KEY = "InfinityPlay-play-counts";
 
@@ -27,13 +28,14 @@ export function incrementPlayCount(gameName: string): void {
 
 export function getDynamicTrending(limit = 12): Game[] {
   const counts = loadPlayCounts();
-  const topGames = gamesData.filter((g) => g.categories.includes("Top 10 Games"));
+  const catalog = gamesData.filter((g) => !isPremiumGame(g));
+  const topGames = catalog.filter((g) => g.categories.includes("Top 10 Games"));
 
   // If no local play data yet, fall back to static Top 10
   const hasData = Object.keys(counts).length > 0;
   if (!hasData) return topGames.slice(0, limit);
 
-  return [...gamesData]
+  return [...catalog]
     .map((game) => {
       const plays = counts[game.name] ?? 0;
       const isTop10 = game.categories.includes("Top 10 Games") ? 1 : 0;

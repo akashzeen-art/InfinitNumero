@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { GameCard } from "@/components/GameCard";
 import { Button } from "@/components/ui/button";
 import { gamesData, Game } from "@/data/games";
+import { getGamesByCategory, getGameThumbnail } from "@/lib/game-utils";
 import {
   ArrowLeft,
   Flame,
@@ -89,7 +90,7 @@ const DEFAULT_META: CategoryMeta = {
 };
 
 function getCategoryPreviews(category: string, limit = 4): Game[] {
-  return gamesData.filter((g) => g.categories.includes(category)).slice(0, limit);
+  return getGamesByCategory(category, limit);
 }
 
 function CategoryCard({
@@ -139,7 +140,14 @@ function CategoryCard({
                   className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl overflow-hidden border-2 border-white/30 shadow-lg group-hover:-translate-y-1 transition-transform"
                   style={{ zIndex: previews.length - i, transitionDelay: `${i * 50}ms` }}
                 >
-                  <img src={game.thumbnail_url} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={getGameThumbnail(
+                      game,
+                      name === "Premium" ? "portrait" : "square"
+                    )}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               ))}
             </div>
@@ -191,7 +199,7 @@ export default function Categories() {
   const categoryStats = useMemo(() => {
     const stats: Record<string, number> = {};
     allCategories.forEach((cat) => {
-      stats[cat] = gamesData.filter((g) => g.categories.includes(cat)).length;
+      stats[cat] = getGamesByCategory(cat).length;
     });
     return stats;
   }, [allCategories]);
@@ -217,9 +225,9 @@ export default function Categories() {
 
   const gamesInCategory = useMemo(
     () =>
-      gamesData
-        .filter((g) => g.categories.includes(decoded))
-        .filter((g) => g.name.toLowerCase().includes(searchQuery.toLowerCase())),
+      getGamesByCategory(decoded).filter((g) =>
+        g.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
     [decoded, searchQuery]
   );
 
@@ -406,7 +414,14 @@ export default function Categories() {
               animate={{ y: [0, -15, 0], rotate: [12, 18, 12] }}
               transition={{ duration: 4 + i, repeat: Infinity, ease: "easeInOut" }}
             >
-              <img src={game.thumbnail_url} alt="" className="w-full h-full object-cover" />
+              <img
+                src={getGameThumbnail(
+                  game,
+                  decoded === "Premium" ? "landscape" : "square"
+                )}
+                alt=""
+                className="w-full h-full object-cover"
+              />
             </motion.div>
           ))}
         </div>
@@ -449,9 +464,20 @@ export default function Categories() {
                   key={game.name}
                   type="button"
                   onClick={() => playGame(game)}
-                  className="shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-white/30 shadow-xl hover:scale-105 hover:border-white transition-all"
+                  className={
+                    decoded === "Premium"
+                      ? "shrink-0 w-16 h-28 sm:w-20 sm:h-36 rounded-2xl overflow-hidden border-2 border-white/30 shadow-xl hover:scale-105 hover:border-white transition-all"
+                      : "shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-white/30 shadow-xl hover:scale-105 hover:border-white transition-all"
+                  }
                 >
-                  <img src={game.thumbnail_url} alt={game.name} className="w-full h-full object-cover" />
+                  <img
+                    src={getGameThumbnail(
+                      game,
+                      decoded === "Premium" ? "portrait" : "square"
+                    )}
+                    alt={game.name}
+                    className="w-full h-full object-cover"
+                  />
                 </button>
               ))}
             </div>
@@ -523,6 +549,7 @@ export default function Categories() {
                 >
                   <GameCard
                     game={game}
+                    orientation={decoded === "Premium" ? "portrait" : "square"}
                     featured={game.categories.includes("Top 10 Games")}
                   />
                 </motion.div>

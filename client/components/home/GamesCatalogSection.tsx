@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Search, Sparkles, Database } from "lucide-react";
-import { gamesData } from "@/data/games";
 import { useGamesFilter } from "@/hooks/useGamesFilter";
+import { getStandardGames } from "@/lib/game-utils";
 import { CategoryFilterBar } from "./CategoryFilterBar";
 import { GamesGrid } from "./GamesGrid";
 import { GamesEmptyState } from "./GamesEmptyState";
@@ -15,10 +15,13 @@ export function GamesCatalogSection({ searchQuery = "" }: GamesCatalogSectionPro
   const { categories, selectedCategory, setSelectedCategory, filteredGames, resetFilters } = useGamesFilter(searchQuery);
   const { t } = useLang();
 
+  const standardGames = getStandardGames();
   const categoryCounts = Object.fromEntries(
     categories.map((cat) => [
       cat,
-      cat === "All Games" ? gamesData.length : gamesData.filter((g) => g.categories.includes(cat)).length,
+      cat === "All Games"
+        ? standardGames.length
+        : standardGames.filter((g) => g.categories.includes(cat)).length,
     ])
   );
 
@@ -43,7 +46,7 @@ export function GamesCatalogSection({ searchQuery = "" }: GamesCatalogSectionPro
             <span className="text-gradient">{t.sections.catalogTitleGradient}</span>
           </h2>
           <p className="text-white/35 text-base sm:text-lg">
-            {gamesData.length} {t.sections.catalogSubtitle}
+            {standardGames.length} {t.sections.catalogSubtitle}
           </p>
         </motion.div>
 
